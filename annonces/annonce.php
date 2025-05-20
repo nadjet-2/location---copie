@@ -1,0 +1,351 @@
+<?php
+session_start();
+$proprietaire_id = $_SESSION['utilisateur']['id']; // Assurez-vous que l'ID de l'utilisateur est bien stocké en session
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form class="container" action="" method="post" enctype="multipart/form-data">
+        <h2>Créer une Nouvelle Annonce</h2>
+        <input type="text" id="titre" name="titre" placeholder="Titre de votre annonce" required>
+        <input type="text" id="adresse" name="adresse" placeholder="Adresse complète" required>
+        <select name="type_logement" required>
+          <option value="" disabled selected hidden>Type de logement</option>
+          <option class="type" value="appartement">Appartement</option>
+          <option class="type" value="maison">Maison</option>
+        </select>
+        <input type="text" id="supperficie" name="supperficie" placeholder="La supperficie en m²" required>
+        <input type="number" id="nombre_pieces" name="nombre_pieces" min="1" placeholder="Nombre de pièces" required>
+        <input type="number" id="nombre_personnes" name="nombre_personnes" min="1" placeholder="Nombre de personnes autorisées" required>
+        <div class="equipement-container">
+            <label class="text" for="equipements">Équipements :</label>
+            <div class="checkbox-grid">
+                <label>
+                    <input type="checkbox" name="equipement[]" value="wifi"> Wifi</label>
+                    <label>
+                    <input type="checkbox" name="equipement[]" value="television"> Télévision</label>
+                <label>
+                    <input type="checkbox" name="equipement[]" value="climatisation"> Climatisation</label>
+                    <label>
+                    <input type="checkbox" name="equipement[]" value="chauffage"> Chauffage</label>
+                
+                <label>
+                    <input type="checkbox" name="equipement[]" value="lave-linge"> Lave linge</label>
+                    <label>
+                    <input type="checkbox" name="equipement[]" value="Sèche-linge"> Sèche linge</label>
+                    <label>
+                    <input type="checkbox" name="equipement[]" value="cuisine"> Cuisine</label>
+                    <label>
+                    <input type="checkbox" name="equipement[]" value="Suite-travail"> Suite pour travail</label>
+            </div>
+            <input type="text" class="other-input" name="autres_equipements" placeholder="Autres équipements...">
+        </div>
+        <label class="label" for="photos">Photos du local :</label>
+        <input type="file" id="photos" name="photos[]" accept="image/*" multiple required>
+    
+        <input type="number" id="tarif" name="tarif" step="0.01" placeholder="Tarif proposé (DA par nuit) " required>
+        <div class="disp-container">
+            <label class="text" for="disponibilite">Disponibilité du local :</label>
+            <input class="date" type="date" id="date_debut" name="date_debut" required>
+            <input class="date" type="date" id="date_fin" name="date_fin" required>
+        </div>
+        <label class="label"  for="piece_identite">Pièce d’identité scannée (PDF ou image) :</label>
+        <input type="file" id="piece_identite" name="piece_identite" accept=".pdf,image/*" required>
+        <label class="label" for="acte_propriete">Acte de propriété (livre foncier scanné) :</label>
+        <input type="file" id="acte_propriete" name="acte_propriete" accept=".pdf,image/*" required>
+        <button class="button" type="submit">Soumettre l'annonce</button>
+      </form>
+
+<style>
+    body {
+    background:rgb(25, 38, 81);
+    min-height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(188, 143, 143, 0.466);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    width: 100%;
+    max-width: 500px;
+    margin: 100px;
+}
+
+.container h2 {
+    color: white;
+    text-align: center;
+    margin-bottom: 32px;
+    font-size: 32px;
+}
+
+.container p {
+    color:rgba(251, 252, 254, 0.81);
+    text-align: center;
+    margin-bottom: 10px;
+    font-size:20px;
+    margin-top: -30px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.label {
+    color: white;
+    font-size: 17px;
+    margin-left:23px;
+    margin-bottom:-20px;
+    color:rgba(251, 252, 254, 0.56);
+
+}
+
+input,
+select {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin:10px;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+input[type="file"] {
+    padding: 8px;
+}
+
+.type{
+    background: #262c38;
+}
+
+.button {
+    background: #5D76A9;
+    color: white;
+    padding: 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    margin-top: 16px;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+    background: rosybrown;
+}
+
+.btn {
+    display: block;
+    width: 95%;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    margin-top: 16px;
+}
+
+.btn:hover {
+    background: #EE82EE;
+}
+.equipement-container ,.disp-container{
+  
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    margin:10px;
+}
+.text{
+    margin-top:10px;
+    margin-left:12px;
+    color:rgba(255, 255, 255, 0.49);
+}
+.date{
+   font-size:15px;
+   margin-right:40px;
+   margin-left:40px;
+
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.other-input {
+  margin-top: 10px;
+  padding: 6px;
+  width: 445px;
+}
+
+@media (max-width: 480px) {
+    .container {
+        margin: 8px;
+        padding: 16px;
+    }
+
+    .container h2 {
+        font-size: 20px;
+    }
+
+    input,
+    select,
+    .button,
+    .btn {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+</style>
+<?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+
+// Connexion à la base de données
+$host = 'localhost';
+$db   = 'location_immobiliere';
+$user = 'root';
+$pass = '';
+
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+    die("Connexion échouée : " . $conn->connect_error);
+}
+
+// Fonction pour sécuriser les noms de fichiers
+function sanitize_filename($filename) {
+    $filename = iconv("UTF-8", "ASCII//TRANSLIT", $filename);
+    return preg_replace('/[^A-Za-z0-9.\-_]/', '_', $filename);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // 1. Récupération des données du formulaire
+    $titre = $_POST['titre'] ?? '';
+    $adresse = $_POST['adresse'] ?? '';
+    $type_logement = $_POST['type_logement'] ?? '';
+    $suppeficie = $_POST['supperficie'] ?? '';
+    $nombre_pieces = $_POST['nombre_pieces'] ?? 0;
+    $nombre_personnes = $_POST['nombre_personnes'] ?? 0;
+    $tarif = $_POST['tarif'] ?? 0;
+    $date_debut = $_POST['date_debut'] ?? '';
+    $date_fin = $_POST['date_fin'] ?? '';
+    $autres_equipements = $_POST['autres_equipements'] ?? '';
+    $equipements = isset($_POST['equipement']) ? implode(',', $_POST['equipement']) : '';
+
+    // 2. Enregistrement des photos
+    $photos_names = [];
+    if (isset($_FILES['photos']) && is_array($_FILES['photos']['tmp_name'])) {
+        foreach ($_FILES['photos']['tmp_name'] as $key => $tmp_name) {
+            if (!empty($tmp_name)) {
+                $file_name = sanitize_filename($_FILES['photos']['name'][$key]);
+                $target_path = "uploads/photos/" . $file_name;
+
+                if (move_uploaded_file($tmp_name, $target_path)) {
+                    $photos_names[] = $target_path;
+                }
+            }
+        }
+    }
+    $photos = implode(',', $photos_names);
+
+    // 3. Pièce d'identité
+    $piece_identite_name = '';
+    if (!empty($_FILES['piece_identite']['tmp_name'])) {
+        $file_name = sanitize_filename($_FILES['piece_identite']['name']);
+        $target_path = "uploads/docs/" . $file_name;
+
+        if (move_uploaded_file($_FILES['piece_identite']['tmp_name'], $target_path)) {
+            $piece_identite_name = $target_path;
+        }
+    }
+
+    // 4. Acte de propriété
+    $acte_propriete_name = '';
+    if (!empty($_FILES['acte_propriete']['tmp_name'])) {
+        $file_name = sanitize_filename($_FILES['acte_propriete']['name']);
+        $target_path = "uploads/docs/" . $file_name;
+
+        if (move_uploaded_file($_FILES['acte_propriete']['tmp_name'], $target_path)) {
+            $acte_propriete_name = $target_path;
+        }
+    }
+
+    // 5. Insertion dans la base de données
+    $sql = "INSERT INTO annonce (
+        titre, adresse, type_logement, supperficie, nombre_pieces, nombre_personnes,
+        equipements, autres_equipements, tarif,
+        date_debut, date_fin, photos,
+        piece_identite, acte_propriete, proprietaire_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param(
+        "ssssiissdsssssi",
+        $titre, $adresse, $type_logement, $suppeficie, $nombre_pieces, $nombre_personnes,
+        $equipements, $autres_equipements, $tarif,
+        $date_debut, $date_fin, $photos,
+        $piece_identite_name, $acte_propriete_name, $proprietaire_id
+    );
+    
+
+    if ($stmt->execute()) {
+        echo "<script>
+    alert('✅ Annonce soumise avec succès !');
+    window.location.href = '../propriétaire/profil.php';
+</script>";
+
+
+    } else {
+        echo "❌ Erreur SQL : " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>
+</body>
+</html>
