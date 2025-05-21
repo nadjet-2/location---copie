@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $stmt->get_result();
 
     if ($user = $result->fetch_assoc()) {
-        // Si c'est l'admin avec email/mot de passe exacts
+        // Si c'est l'admin
         if ($email === "mnhome.dz1@gmail.com" && $mot_de_passe === "amanmn2025home") {
             $_SESSION['admin'] = [
                 'id' => $user['id'],
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        // Pour tous les autres utilisateurs (propriétaires, locataires, etc.)
+        // Stockage des données de l'utilisateur
         $_SESSION['utilisateur'] = [
             'id' => $user['id'],
             'nom' => $user['nom'],
@@ -46,7 +46,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'photo' => $user['photo'] ?? '',
             'role' => $user['role']
         ];
-        header('Location: ../propriétaire/profil.php');
+
+        // Redirection selon le rôle
+        if ($user['role'] === 'Proprietaire') {
+            header('Location: ../propriétaire/profil.php');
+        } elseif ($user['role'] === 'locataire') {
+            header('Location: ../profil/locataire.php');
+        } else {
+            header('Location: ../index.php'); // Redirection par défaut
+        }
         exit();
     } else {
         header('Location: connexion.php?err3=1'); // Mauvais identifiants
@@ -54,13 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -86,3 +87,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </body>
 </html>
+
