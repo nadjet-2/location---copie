@@ -63,14 +63,31 @@ $proprietaire_id = $_SESSION['utilisateur']['id']; // Assurez-vous que l'ID de l
 
 <style>
     body {
-    background:rgb(25, 38, 81);
-    min-height: 100%;
-    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0;
+    padding: 0;
+    background-image: url("../images/meilleurarchitecteCannespourvillamaisonluxejpg_637123da2fa64.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 100%;
     font-family: sans-serif;
+    
 }
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.144); 
+    z-index: 0;
+  }
 
 .container {
     background: rgba(255, 255, 255, 0.1);
@@ -110,7 +127,7 @@ form {
     font-size: 17px;
     margin-left:23px;
     margin-bottom:-20px;
-    color:rgba(251, 252, 254, 0.56);
+    color:rgba(251, 252, 254, 0.75);
 
 }
 
@@ -134,7 +151,7 @@ select:focus {
 }
 
 input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.92);
 }
 
 input[type="file"] {

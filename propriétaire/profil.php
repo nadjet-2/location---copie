@@ -51,8 +51,42 @@ if (isset($_GET['delete_annonce'])) {
 }
 
 
+// Traitement de la mise à jour du profil
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
+    $prenom = $_POST['prenom'];
+    $nom = $_POST['nom'];
+    $email = $_POST['email'];
+    $tel = $_POST['tel'];
+
+    $photoPath = $utilisateur['photo'];
+    if (!empty($_FILES['photo']['name'])) {
+        $targetDir = "../logins/";
+        $fileName = basename($_FILES["photo"]["name"]);
+        $targetFile = $targetDir . $fileName;
+        if (move_uploaded_file($_FILES["photo"]["tmp_name"], $targetFile)) {
+            $photoPath = $fileName;
+        }
+    }
+
+    $stmt = $conn->prepare("UPDATE utilisateur SET prenom=?, nom=?, email=?, tel=?, photo=? WHERE id=?");
+    $stmt->bind_param("sssssi", $prenom, $nom, $email, $tel, $photoPath, $utilisateur_id);
+    if ($stmt->execute()) {
+        $_SESSION['utilisateur']['prenom'] = $prenom;
+        $_SESSION['utilisateur']['nom'] = $nom;
+        $_SESSION['utilisateur']['email'] = $email;
+        $_SESSION['utilisateur']['tel'] = $tel;
+        $_SESSION['utilisateur']['photo'] = $photoPath;
+
+        echo "<script>alert('Profil mis à jour avec succès !'); window.location.href='profil.php';</script>";
+        exit;
+    } else {
+        echo "<script>alert('Erreur lors de la mise à jour.');</script>";
+    }
+}
+
 
 ?>
+
 
 
 <html lang="en">
@@ -78,25 +112,26 @@ if (isset($_GET['delete_annonce'])) {
             <div class="notif-menu" id="notifMenu">
                 <ul>
                     <li><a href=""> Nouveau message reçu</a></li>
-                    <li><a href=""> Actualiser une annonce</a></li>
-                    <li><a href=""> Valider une réservation</a></li>
-                    <li><a href=""> Annuler une réservation</a></li>
-
-
+                 
                 </ul>
             </div>
             <button class="profil"><i class="fas fa-user"></i></button>
-            <div class="profil-menu" id="profilMenu">
-                <ul>
-                    <li><a href="">Mon profil</a></li>
-                    <li><a href="../logout.php">Déconnexion</a>
-                    </li>
-                </ul>
-            </div>
+            
         </div>
         </nav>
         
     </div>
+
+    <div class="tab-nav">
+    <button class="tab-link" onclick="showTab('annonces', this)">Annonces</button>
+    <button class="tab-link" onclick="showTab('reservations', this)">Réservations</button>
+    <button class="tab-link" onclick="showTab('actualisations', this)">Actualisation des annonces </button>
+
+    </div>
+
+    <main class="content">
+    <div id="annonces" class="tab">
+
     <div id="Rechercher" class="barre-de-recherche">
             <input class="bdr" type="text" placeholder="Rechercher" />
         </div>
@@ -131,6 +166,42 @@ if (isset($_GET['delete_annonce'])) {
     </div>
 <?php endwhile; ?>
 </div>
+</div>
+
+ <div id="reservations" class="tab">
+    <div class="ancs">
+            <h3>Toutes les reservations</h3>
+        <div class="annonc" onclick="window.location.href='detail_bien.php';">
+             <div class="image">
+                       <img class="img" src="../images/273818788.jpg" alt="img">
+                    </div>
+                <p class="nom">Nom de l'annonce</p>
+                <p class="date">Date de l'annonce</p>
+                <div class="btnn">
+                <button class="act">Annuler</button>
+                <button class="act">Valider</button>
+                </div>
+
+        </div>
+    </div>
+</div>
+
+        <div id="actualisations" class="tab">
+            <div class="ancs">
+        <h3>Annonces à actualisés</h3>
+                <div class="annonc">
+                   <div class="image">
+                       <img class="img" src="../images/273818788.jpg" alt="img">
+                    </div>
+                <p class="nom">Nom de l'annonce</p>
+                <p class="date">Date de l'annonce</p>
+                <button class="act">Actualiser</button>
+                </div>
+            </div>
+        </div>
+
+
+</main>
 
 
 
@@ -144,14 +215,46 @@ if (isset($_GET['delete_annonce'])) {
             <h3>Mon Profil</h3>
             <button class="pann-ferm" id="pannfermbtn">✖️</button>
         </div>
-        <div class="panneau-cont">
-    <ul>
-        <li><a href=""><?php echo htmlspecialchars($utilisateur['prenom'] . ' ' . $utilisateur['nom']); ?></a></li>
-        <li><a href=""><?php echo htmlspecialchars($utilisateur['email']); ?></a></li>
-        <li><a href=""><?php echo isset($utilisateur['tel']) ? htmlspecialchars($utilisateur['tel']) : 'Non renseigné'; ?></a></li>
-        <li><a href=""><?php echo htmlspecialchars($utilisateur['role']); ?></a></li>
-    </ul>
+       <div class="panneau-cont">
+    <div id="profilInfos">
+        <ul>
+            <li><a href=""><?php echo htmlspecialchars($utilisateur['prenom'] . ' ' . $utilisateur['nom']); ?></a></li>
+            <li><a href=""><?php echo htmlspecialchars($utilisateur['email']); ?></a></li>
+            <li><a href=""><?php echo isset($utilisateur['tel']) ? htmlspecialchars($utilisateur['tel']) : 'Non renseigné'; ?></a></li>
+            <li><a href=""><?php echo htmlspecialchars($utilisateur['role']); ?></a></li>
+            <li><a class="a" href="../logout.php">Déconnexion</a></li>
+        </ul>
+        <button class="act1" id="editBtn">Modifier</button>
+    </div>
+
+    <div id="editForm" style="display: none;">
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="update_profile" value="1">
+
+            <label>Prénom :</label>
+            <input type="text" name="prenom" value="<?= htmlspecialchars($utilisateur['prenom']) ?>" required><br><br>
+
+            <label>Nom :</label>
+            <input type="text" name="nom" value="<?= htmlspecialchars($utilisateur['nom']) ?>" required><br><br>
+
+            <label>Email :</label>
+            <input type="email" name="email" value="<?= htmlspecialchars($utilisateur['email']) ?>" required><br><br>
+
+            <label>Téléphone :</label>
+            <input type="text" name="tel" value="<?= htmlspecialchars($utilisateur['tel']) ?>"><br><br>
+
+            <label>Photo :</label>
+            <input type="file" name="photo"><br><br>
+
+            <div class="modif">
+            <button type="submit" class="act">Enregistrer</button>
+            <button type="button" class="act" id="cancelEdit">Annuler</button>
+            </div>
+        </form>
+    </div>
 </div>
+
+
 
     </div>
    
@@ -176,9 +279,12 @@ if (isset($_GET['delete_annonce'])) {
 <style>
     body{
        
-        margin-top: 150px;
+        margin-top: 90px;
         font-family: serif;
         background-color: #f3f4f6;
+        margin-left:0;
+        margin-right:0;
+
     }
     nav{
         display: flex;
@@ -206,8 +312,41 @@ if (isset($_GET['delete_annonce'])) {
         margin-top: -5.5px;
 
 }
+.tab-nav {
+      display: flex;
+      background-color:rgba(28, 42, 89, 0.69);
+      overflow-x: auto;
+      margin-top:-25px;
+    }
+
+    .tab-nav button {
+      flex: 1;
+      background-color:rgba(28, 42, 89, 0.62);
+      border: none;
+      color: white;
+      padding: 5px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.3s;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab-nav button:hover,
+    .tab-nav button.active {
+      background: #374151;
+      border-bottom: 3px solid #3b82f6; 
+    }
+    .tab {
+    display: none;
+}
+
+.tab.active {
+    display: block;
+}
+
+
 .barre-de-recherche {
-  margin: -65px auto 30px;
+  margin: 10px auto 20px;
   background-color: #3a3a3ab9;
   border-radius: 50px;
   padding: 18px 90px;
@@ -218,6 +357,7 @@ if (isset($_GET['delete_annonce'])) {
   align-items: center;
 }
 
+
 .bdr {
   background-color: #131212;
   padding: 14px 100px;
@@ -225,6 +365,11 @@ if (isset($_GET['delete_annonce'])) {
   color: rgba(240, 248, 255, 0.75);
   border: 0px solid black;
   cursor: pointer;
+  
+}
+.bdr::placeholder{
+    text-align:center;
+
 }
     .creer{
         background-color: #5D76A9;
@@ -341,38 +486,41 @@ if (isset($_GET['delete_annonce'])) {
         margin:1%;
     }
    
-    .annonc{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border:1px solid #3a3a3ab9;
-        border-radius:10px;
-        gap:20px;
-        cursor:pointer;
-        transition: transform 0.3s ease;
-    }
+   
     .annonc:hover{
         transform: translateY(-2px);
         box-shadow: 0 5px 15px #5D76A9;
 
     }
-    .image{
-        border:1px solid rgba(91, 90, 90, 0.72);
-        border-radius:10px;
-        padding:auto;
-        margin-left:3px;
+    .annonc {
+  display: flex;
+  align-items: center;
+  border: 1px solid #3a3a3ab9;
+  border-radius: 10px;
+  gap: 15px;
+  padding: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  background-color: white;
+}
 
-    }
-    .img{
-        width: 60px;
-        height:45px;
-        border-radius:8px;
+.image {
+  flex-shrink: 0;
+}
 
-        
-    }
-    .nom{
-        margin-left:-400px;
-        }
+.img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.nom {
+  font-size: 16px;
+  font-weight: bold;
+  flex-grow: 1;
+}
+
     .btn-supp{
         padding:10px;
         border-radius:50px;
@@ -430,12 +578,43 @@ if (isset($_GET['delete_annonce'])) {
     .panneau-cont {
         padding: 20px;
     }
+    .panneau-cont form input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.panneau-cont form label {
+    font-weight: bold;
+}
+
+.panneau-cont form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #5D76A9;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}
+
+.panneau-cont form button:hover {
+    background-color: #3a4e7c;
+}
+
 
     .pann-ferm {
         background: none;
         border: none;
         font-size: 15px;
         cursor: pointer;
+    }
+    .pann-ferm:hover{
+        background: none;
+        font-size: 16px;
+
     }
     h3{
         margin-bottom: 10px;
@@ -459,12 +638,12 @@ if (isset($_GET['delete_annonce'])) {
     border-radius:30px;
 }
 .panneau-cont{
-    padding: 0;
+    padding: 10;
 
 }
 .panneau-cont ul {
     list-style: none;
-        
+
         padding: 0;
         display: block;
 
@@ -482,7 +661,50 @@ if (isset($_GET['delete_annonce'])) {
         display:block;
         padding:10px;
     }
+    .act{
+        background-color: #5D76A9;
+        border-radius: 20px;
+        padding: 10px 20px;
+        color: aliceblue;
+        border: none;
+        cursor: pointer;
+        margin-right:20px;
+    }
+    button:hover {
+  background-color: rosybrown;
+  font-size:13.5px;
 
+}
+.act{
+    margin-right:5px;
+
+}
+.a:hover{
+  background-color: rgba(188, 143, 143, 0.37);
+  font-size:19px;
+
+}
+.act1{
+        
+  display: block;
+  margin: 20px auto;
+  background-color: #5D76A9;
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.modif{
+    display: grid;
+    grid-template-columns: auto;
+    gap: 5px;
+}
+
+
+
+        
+    
 
 @keyframes fadeinout {
     0% { opacity: 0; }
@@ -490,6 +712,8 @@ if (isset($_GET['delete_annonce'])) {
     90% { opacity: 1; }
     100% { opacity: 0; }
 }
+
+</style>
 
 </style>
 
@@ -522,12 +746,15 @@ if (isset($_GET['delete_annonce'])) {
         }
     });
 
-// Ouvrir le panneau latéral quand on clique sur "Mon profil"
-    document.querySelector('#profilMenu ul li a').addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('panneau').classList.add('open');
-        document.getElementById('profilMenu').style.display = 'none';
-    });
+// Ouvrir le panneau latéral quand on clique sur le bouton "profil"
+document.querySelector('.profil').addEventListener('click', function (e) {
+    e.stopPropagation();
+    document.getElementById('panneau').classList.add('open');
+
+    // Optionnel : cacher le menu si jamais il s'affiche encore
+    document.getElementById('profilMenu').style.display = 'none';
+});
+
 
 // Fermer le panneau latéral
     document.getElementById('pannfermbtn').addEventListener('click', function() {
@@ -536,10 +763,59 @@ if (isset($_GET['delete_annonce'])) {
 
 
 
+// Supprimer une annonce et afficher le message
+    document.querySelectorAll('.btn-supp').forEach((btn) => {
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation(); //empecher la redirection
+            const annonce = this.closest('.annonc');
+            if (!annonce) return;
+            const confirmation =confirm("Es-tu sur de vouloir supprimer cette annonce?"); 
+            if (confirmation) {
+                annonce.remove();
 
-   
+// Affiche le message
+                const msg = document.getElementById('message-suppression');
+                msg.textContent = " Annonce supprimée avec succès";
+                msg.style.display = 'block';
+
+// Cache le message après 3 secondes
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                }, 3000);
+            }
+        });
+    });
     
     
+
+    function showTab(tabId, btn) {
+      // Masquer tous les contenus
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+
+      // Afficher l'onglet actif
+      document.getElementById(tabId).classList.add('active');
+
+      // Mettre à jour les boutons d'onglets
+      document.querySelectorAll('.tab-link').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    window.onload = function () {
+  showTab('annonces', document.querySelector('.tab-link')); 
+};
+
+document.getElementById('editBtn').addEventListener('click', function () {
+    document.getElementById('profilInfos').style.display = 'none';
+    document.getElementById('editForm').style.display = 'block';
+});
+
+document.getElementById('cancelEdit').addEventListener('click', function () {
+    document.getElementById('editForm').style.display = 'none';
+    document.getElementById('profilInfos').style.display = 'block';
+});
+
+    
+  
 </script>
 
 

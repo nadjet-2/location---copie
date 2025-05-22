@@ -146,7 +146,7 @@ $result = $conn->query($sql);
   <?php endif; ?>
 
 
-  <!-- Annonces validées -->
+ 
   <h2 style="margin-top: 40px;">Toutes les annonces validées</h2>
   <?php
   $sql2 = "SELECT * FROM annonce WHERE valide = 1 ORDER BY id DESC";
@@ -248,46 +248,49 @@ $result = $conn->query($sql);
         margin:1%;
     }
    
-    .annonc{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border:1px solid #3a3a3ab9;
-        border-radius:10px;
-        gap:20px;
-        cursor:pointer;
-        transition: transform 0.3s ease;
-    }
+    
     .annonc:hover{
         transform: translateY(-2px);
         box-shadow: 0 5px 15px #5D76A9;
 
     }
-    .image{
-        border:1px solid rgba(91, 90, 90, 0.72);
-        border-radius:10px;
-        margin-left:3px;
-        padding-bottom:-100px;
+    .annonc {
+  display: flex;
+  align-items: center;
+  border: 1px solid #3a3a3ab9;
+  border-radius: 10px;
+  gap: 15px;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  background-color: white;
+}
 
+.image {
+  flex-shrink: 0;
+}
 
+.img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.nom {
+  font-size: 16px;
+  font-weight: bold;
+  flex-grow: 1;
+}
+
+    .nom1{
+      font-size: 16px;
+      font-weight: bold;
+      flex-grow: 1;
 
     }
-    .img{
-        width: 60px;
-        height:45px;
-        border-radius:8px;
-
-        
-    }
-    .nom{
-        margin-left:-850px;
-        }
-        .nom1{
-        margin-right:950px;
-
-        }
     .btn-supp{
-        padding:10px;
+        padding:50px;
         border-radius:50px;
         border:none;
         margin-right:15px;
