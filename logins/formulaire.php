@@ -32,10 +32,11 @@ if ($check_result->num_rows > 0) {
 $check_stmt->close();
 
 
-    if (strlen($mot_de_passe) !== 6) {
-      echo "<script>alert('Le mot de passe doit contenir exactement 6 caractères.');</script>";
-      exit();
-  }
+   if (strlen($mot_de_passe) < 6) {
+    echo "<script>alert('Le mot de passe doit contenir au moins 6 caractères.'); window.history.back();</script>";
+    exit();
+}
+
 
 
 
@@ -128,7 +129,7 @@ $check_stmt->close();
         <option class="role" value="Proprietaire">Proprietaire</option>
         <option class="role" value="Locataire">Locataire</option>
       </select>
-      <input type="password" id="mot_de_passe" name="mot_de_passe" placeholder="Créer un mot de passe" minlength="6" maxlength="6" required />
+      <input type="password" id="mot_de_passe" name="mot_de_passe" placeholder="Créer un mot de passe" required />
       <button type="submit">S'inscrire</button>
     </form>
     <a class="btn" href="../index.php">Retour</a>

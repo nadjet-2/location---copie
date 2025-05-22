@@ -86,18 +86,13 @@ $result = $conn->query($sql);
     <button class="tab-link" onclick="showTab('comptes', this)">Comptes</button>
     <button class="tab-link" onclick="showTab('annonces', this)">Annonces</button>
     <button class="tab-link" onclick="showTab('reservations', this)">Réservations</button>
-    <a href="../logout.php"><button class="tab-link" onclick="showTab('retour', this)">Se déconnecter</button></a>
+    <a href="../logout.php"><button class="tab-link" onclick="showTab('retour', this)"><i class="fas fa-user"></i></button></a>
    
   </div>
 
   <main class="content">
     <div id="comptes" class="tab">
-
-
-
-    
-
-
+  <h2>Tous les comptes</h2>
 <div class="ancs">
     <?php while ($row = $result->fetch_assoc()) : ?>
         <div class="annonc">
@@ -113,6 +108,7 @@ $result = $conn->query($sql);
         </div>
     <?php endwhile; ?>
 </div>
+
   </div>
 
   <div id="annonces" class="tab">
@@ -132,7 +128,7 @@ $result = $conn->query($sql);
             <img class="img" src="../annonces/<?= htmlspecialchars($row['photos']) ?>" alt="img">
           </div>
           <p class="nom1"><?= htmlspecialchars($row['titre']) ?></p>
-          <a href="admin.php?valider_id=<?= $row['id'] ?>#annonces" class="button1">Valider</a>
+          <a class="button1" href="admin.php?valider_id=<?= $row['id'] ?>#annonces" >Valider</a>
 <a href="admin.php?delete_annonce=<?= $row['id'] ?>#annonces" class="btn-supp" onclick="return confirm('Supprimer cette annonce ?')">
     <i class="fas fa-trash-alt"></i>
 </a>
@@ -184,12 +180,16 @@ $result = $conn->query($sql);
 
        
     <div id="reservations" class="tab">
-    <div class="ancs">
-        <div class="annonc">
-            
-            <p class="nom"></p>
-        </div>
-    </div>
+    <h2 >Valider le payement</h2>
+        <div class="annonc" >
+                   <div class="image">
+                       <img class="img" src="../images/273818788.jpg" alt="img">
+                    </div>
+                <p class="nom">Nom de l'annonce</p>
+                <p class="date">Date de l'annonce</p>
+                <button class="button1">Valider</button>
+                </div>
+            </div>
     </div>
   </main>
 
@@ -217,9 +217,9 @@ $result = $conn->query($sql);
       background-color:rgba(28, 42, 89, 0.89);
       border: none;
       color: white;
-      padding: 1rem;
+      padding: 16px;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 16px;
       transition: background 0.3s;
       border-bottom: 3px solid transparent;
     }
@@ -227,6 +227,8 @@ $result = $conn->query($sql);
     .tab-nav button:hover,
     .tab-nav button.active {
       background: #374151;
+      font-size: 18px;
+
     
     }
 
@@ -248,7 +250,7 @@ $result = $conn->query($sql);
         margin:1%;
     }
    
-    
+   
     .annonc:hover{
         transform: translateY(-2px);
         box-shadow: 0 5px 15px #5D76A9;
@@ -260,7 +262,7 @@ $result = $conn->query($sql);
   border: 1px solid #3a3a3ab9;
   border-radius: 10px;
   gap: 15px;
-  padding: 10px;
+  padding: 5px;
   cursor: pointer;
   transition: transform 0.3s ease;
   background-color: white;
@@ -290,10 +292,11 @@ $result = $conn->query($sql);
 
     }
     .btn-supp{
-        padding:50px;
+        padding:15px;
         border-radius:50px;
         border:none;
         margin-right:15px;
+
     }
     .btn-supp:hover{
         cursor: pointer;
@@ -302,18 +305,24 @@ $result = $conn->query($sql);
         font-size:15px;
     }
     .button1 {
-  border-radius: 20px;
+ border-radius: 20px;
   padding: 10px 20px;
   color: aliceblue;
   background-color: #5D76A9;
   cursor: pointer;
   border: none;
-  margin-left:-70px;
-  text-decoration:none;
+  text-decoration: none;
+
+
     }
     button:hover {
   background-color: rosybrown;
-  font-size:13.5px;
+  font-size:16px;
+
+    }
+    .button1:hover {
+  background-color: rosybrown;
+  font-size:16px;
 
     }
 

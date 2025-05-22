@@ -57,6 +57,7 @@ $conn->close();
     <div>
       <img class="Logo" src="../images/Logo.png" alt="Logo" />
     </div>
+    <a class="boutt" href="modifier_annonce.php?id=<?= $annonce['id'] ?>" >Modifier</a>
   </nav>
 
        
@@ -203,6 +204,27 @@ nav.nav-barre {
   margin-top: 10px;
 
 }
+.boutt{
+  
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: aliceblue;
+  background-color: #5D76A9;
+  cursor: pointer;
+  border: none;
+}
+
+.boutt:hover {
+  background-color: rosybrown;
+  font-size:13.5px;
+
+}
+a{
+  text-decoration: none;
+  font-size:14px;
+
+}
+
 .container {
   max-width: 1100px;
   margin: auto;
