@@ -1,4 +1,7 @@
 <?php
+session_start();
+
+
 $host = 'localhost';
 $db = 'location_immobiliere';
 $user = 'root';
@@ -78,17 +81,27 @@ $conn->close();
   <a href="detail_bien.php?id=<?= $annonce['id'] ?>" class="boutt">Retour</a>
 </nav>
 
-<div class="titre">
-  <h1>Modifier : <?= htmlspecialchars($annonce['titre']) ?></h1>
-</div>
+
+
 
 <div class="container">
   <form method="POST">
+    <div class="titrem">
+      <h1>Modifier l'annonce : </h1> 
+        <div class="detail" >
+          <div >
+          <h3>Titre</h3>
+          <input type="text" name="titre" value="<?= htmlspecialchars($annonce['titre']) ?>" required />
+          </div>
+        </div>
+    </div> <br>
     <div class="image-princ">
       <img src="<?= htmlspecialchars($photo_principale) ?>" alt="Photo" />
     </div>
 
     <div class="details">
+
+
 
       <div class="detail">
         <div class="detail-cont">

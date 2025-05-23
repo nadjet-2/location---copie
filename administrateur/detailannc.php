@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $host = 'localhost';
 $db = 'location_immobiliere';
 $user = 'root';
