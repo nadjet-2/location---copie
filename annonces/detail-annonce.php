@@ -37,7 +37,16 @@ $photo_principale = !empty($photos[0]) ?  $photos[0] : '../images/default.jpg';
 
 
 
+$sqlAvis = "SELECT nom, note, commentaire FROM avis WHERE annonce_id = ?";
+$stmtAvis = $conn->prepare($sqlAvis);
+$stmtAvis->bind_param("i", $id);
+$stmtAvis->execute();
+$resultAvis = $stmtAvis->get_result();
 
+$avis = [];
+while ($row = $resultAvis->fetch_assoc()) {
+    $avis[] = $row;
+}
 
 
 
@@ -61,6 +70,8 @@ $conn->close();
     <div>
       <img class="Logo" src="../images/Logo.png" alt="Logo" />
     </div>
+        <a style="font-size: 14px;"  class="btnn" href="../index.php"><i class="fas fa-user"></i></a>
+
   </nav>
 
        
@@ -176,8 +187,51 @@ $conn->close();
     </div>
     </div>
 
-  
+   <section class="testimonial-section">
+    <h2>Que disent nos clients ?</h2>
+    <p>Écoutez nos clients satisfaits.</p>
+<div class="testimonial-wrapper">
+    <div class="testimonial-container" id="testimonial-list">
+  <?php foreach ($avis as $avisItem): ?>
+    <div class="testimonial">
+      <div class="name"><?= htmlspecialchars($avisItem['nom']) ?></div>
+      <div class="rating">
+        <?php
+          $note = floatval($avisItem['note']);
+          echo str_repeat("★", floor($note));
+          if ($note - floor($note) >= 0.5) echo "½";
+        ?>
+      </div>
+      <div class="comment"><?= nl2br(htmlspecialchars($avisItem['commentaire'])) ?></div>
+    </div>
+  <?php endforeach; ?>
+</div>
+</div>
 
+<br>
+<div style="text-align: center;">
+  <button class="scroll-btn" onclick="scrollTestimonials('left')"><</button>
+  <button class="scroll-btn" onclick="scrollTestimonials('right')">></button>
+</div>
+
+<br>
+
+    <?php if (isset($_SESSION['utilisateur']) && strtolower($_SESSION['utilisateur']['role']) === 'locataire'): ?>
+  <form id="testimonial-form" method="post" action="ajouter_avis.php">
+    <input type="hidden" name="id_annonce" value="<?= htmlspecialchars($annonce['id']) ?>">
+    <input type="text" name="nom" placeholder="Nom" required />
+    <input type="number" name="note" min="1" max="5" step="0.1" placeholder="Note (1-5)" required />
+    <textarea name="commentaire" placeholder="Votre avis" required></textarea>
+    <button  type="submit">Publier l'avis</button>
+  </form>
+<?php else: ?>
+  <p style="color:  #5d76a9df;"> Veuillez <a style="text-decoration: none;color:  #5d76a9df; " href="/connexion.php">vous connecter</a> pour laisser un avis.</p>
+<?php endif; ?>
+
+
+  </section>
+
+<br><br>
   <footer id="Propriétés">
   <div class="footer-div">
     
@@ -205,7 +259,6 @@ $conn->close();
 
   </div>
 </footer>
-  <!-- MODALE -->
 <div id="modalReservation" class="modal">
   <div class="modal-content">
     <span class="close" id="fermerModal">&times;</span>
@@ -242,6 +295,20 @@ $conn->close();
       modal.style.display = "none";
     }
   }
+
+  function scrollTestimonials(direction) {
+    const container = document.getElementById('testimonial-list');
+    const scrollAmount = 300; // ajustable pour correspondre à un avis
+
+    if (direction === 'left') {
+      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  }
+
+
+
 </script>
 
 </body>
@@ -282,6 +349,18 @@ nav.nav-barre {
   cursor: pointer;
   margin-top: 10px;
 
+}
+.btnn{
+  background-color: #5D76A9;
+        border-radius: 20px;
+        padding: 10px 20px;
+        color: aliceblue;
+        border: none;
+        cursor: pointer;
+}
+.btnn:hover{
+  background-color: rosybrown;
+  font-size:13.5px;
 }
 .container {
   max-width: 1100px;
@@ -479,8 +558,129 @@ footer {
 
 .modal-content .btn {
   margin-top: 10px;
-  align-self: flex-end; /* ou center si tu veux le centrer */
+  align-self: flex-end; 
+}
+.testimonial-wrapper {
+  overflow: hidden;
+  max-width: 880px; /* 3 * 280px + gap (~20px * 2) */
+  margin: auto;
+}
+.testimonial-section {
+  text-align: center;
+  max-width: 900px;
+  margin: auto;
+}
+
+.testimonial-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 20px;
+  padding: 10px 0;
+  margin: 20px auto;
+  max-width: 100%;
+}
+
+.testimonial-container::-webkit-scrollbar {
+  height: 8px;
+}
+.testimonial-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+
+.testimonial {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+   min-width: 280px;
+  flex: 0 0 auto;
+}
+
+.testimonial:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.testimonial .name {
+  font-weight: bold;
+  color: #2c3e50;
+  font-size: 1.1em;
+}
+
+.testimonial .rating {
+  color: #f39c12;
+  font-size: 1.2em;
+}
+
+.testimonial .comment {
+  font-size: 0.95em;
+  color: #444;
+  line-height: 1.4;
+}
+
+
+.testimonial .name {
+  font-weight: bold;
+  color: #222;
+}
+
+.testimonial .rating {
+  color: #f39c12;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+  margin: auto;
+}
+
+form input, form textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+form button {
+  background-color: #5D76A9;
+  border-radius: 10px;
+  padding: 10px 40px;
+  color: aliceblue;
+  border: none;
+  cursor: pointer;
+}
+
+form button:hover {
+   background-color: rosybrown;
+  font-size:13.5px;
+}
+
+.scroll-btn {
+  background-color:rgba(101, 103, 108, 0.58);
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 50px 50px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+}
+
+.scroll-btn:hover {
+  background-color:rgb(101, 103, 108);
 }
 
 </style>
+
+
 </html>

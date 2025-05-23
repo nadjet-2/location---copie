@@ -33,9 +33,7 @@
     <p>Nous nous réservons le droit de modifier ces conditions à tout moment. Les modifications seront effectives dès leur publication.</p>
   </section>
 
-  <footer class="page-footer">
-    <p>&copy; 2025 MN Home DZ. Tous droits réservés.</p>
-  </footer>
+  
 
 </body>
 </html>

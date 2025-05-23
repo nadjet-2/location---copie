@@ -30,9 +30,7 @@
     <p>Vous pouvez demander l'accès, la modification ou la suppression de vos données en nous contactant.</p>
   </section>
 
-  <footer class="page-footer">
-    <p>&copy; 2025 MN Home DZ. Tous droits réservés.</p>
-  </footer>
+  
 
 </body>
 </html>

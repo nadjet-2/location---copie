@@ -57,7 +57,11 @@ $conn->close();
     <div>
       <img class="Logo" src="../images/Logo.png" alt="Logo" />
     </div>
+    <div>
     <a class="boutt" href="modifier_annonce.php?id=<?= $annonce['id'] ?>" >Modifier</a>
+    <a class="boutt" href="profil.php"><i class="fas fa-user"></i></a>
+    </div>
+
   </nav>
 
        

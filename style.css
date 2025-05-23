@@ -332,3 +332,24 @@ footer {
     color:  #5d76a9df;
 
   }
+  .page-container{
+     font-family: sans-serif;
+  background: #f3f4f6;
+  color: #1f2937;
+  padding: 0;
+  margin-top: 10px;
+  margin-left:0;
+  margin-right:0;
+
+  margin-bottom:0;
+  }
+  .page-section{
+    background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  margin-bottom: 24px;
+  }
+  .page-header{
+    text-align: center;
+  }
