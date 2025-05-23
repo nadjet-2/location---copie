@@ -70,7 +70,7 @@ $conn->close();
     <div>
       <img class="Logo" src="../images/Logo.png" alt="Logo" />
     </div>
-        <a style="font-size: 14px;"  class="btnn" href="../index.php"><i class="fas fa-user"></i></a>
+        <a style="font-size: 14px;"  class="btnn" href="../index.php"><i class="fas fa-arrow-left"></i></i></a>
 
   </nav>
 

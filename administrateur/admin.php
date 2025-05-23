@@ -86,7 +86,7 @@ $result = $conn->query($sql);
     <button class="tab-link" onclick="showTab('comptes', this)">Comptes</button>
     <button class="tab-link" onclick="showTab('annonces', this)">Annonces</button>
     <button class="tab-link" onclick="showTab('reservations', this)">Réservations</button>
-    <a href="../logout.php"><button class="tab-link" onclick="showTab('retour', this)"><i class="fas fa-user"></i></button></a>
+    <a href="../logout.php"><button class="tab-link" onclick="showTab('retour', this)"><i class="fas fa-sign-out-alt"></i></button></a>
    
   </div>
 
@@ -227,7 +227,7 @@ $result = $conn->query($sql);
     .tab-nav button:hover,
     .tab-nav button.active {
       background: #374151;
-      font-size: 18px;
+      font-size: 16.5px;
 
     
     }

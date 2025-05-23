@@ -326,7 +326,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
       color: white;
       padding: 5px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 14px;
       transition: background 0.3s;
       border-bottom: 3px solid transparent;
     }
