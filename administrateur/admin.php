@@ -75,6 +75,7 @@ $result = $conn->query($sql);
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="admin.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <title>Administrateur</title>
@@ -198,6 +199,7 @@ $result = $conn->query($sql);
 
 <div id="message-suppression" class="message" style="display: none;"></div>
 
+<<<<<<< HEAD
   <style>
     body {
       margin: 0;
@@ -341,6 +343,9 @@ $result = $conn->query($sql);
     }
     
   </style>
+=======
+ 
+>>>>>>> f5c2588636913f9b18cc38b525f744d79a830392
 
   <script>
     function showTab(tabId, btn) {

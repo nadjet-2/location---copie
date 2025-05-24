@@ -10,6 +10,7 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="locataire.css"/>
   <title>Profil Locataire</title>
 </head>
 <body>
