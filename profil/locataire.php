@@ -206,7 +206,7 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
 
                                             <div class="review-date">
                                                 <i class="fas fa-calendar"></i>
-                                                Avis laissé le 
+                                                Avis laissé le : 
                                             </div>
 
                                             <div class="review-rating">
@@ -252,6 +252,7 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
 
                                             <div class="saved-dates">
                                                 <i class="fas fa-calendar"></i>
+                                                annonce sauvegarder le : 
                                             </div>
                                         </div>
 
