@@ -170,7 +170,7 @@ $result = $conn->query($sql);
     <p>Aucune annonce validée pour le moment.</p>
   <?php endif;
 
-  $conn->close();
+ 
   ?>
 </div>
 
@@ -181,16 +181,36 @@ $result = $conn->query($sql);
 
        
     <div id="reservations" class="tab">
-    <h2 >Valider le payement</h2>
-        <div class="annonc" >
-                   <div class="image">
-                       <img class="img" src="../images/273818788.jpg" alt="img">
+    <h2>Réservations validées</h2>
+    <?php
+    $reservations = $conn->query("
+        SELECT r.*, a.titre, a.photos, u.nom, u.prenom 
+        FROM reservation r
+        JOIN annonce a ON r.annonce_id = a.id
+        JOIN utilisateur u ON r.locataire_id = u.id
+        WHERE r.statut = 'valide'
+        ORDER BY r.id DESC
+    ");
+
+    if ($reservations && $reservations->num_rows > 0): ?>
+        <div class="ancs">
+            <?php while ($res = $reservations->fetch_assoc()): ?>
+                <div class="annonc">
+                    <div class="image">
+                        <img class="img" src="../annonces/<?= htmlspecialchars($res['photos']) ?>" alt="img">
                     </div>
-                <p class="nom">Nom de l'annonce</p>
-                <p class="date">Date de l'annonce</p>
-                <button class="button1">Valider</button>
+                    <p class="nom"><?= htmlspecialchars($res['titre']) ?></p>
+                    <p class="date">Par : <?= htmlspecialchars($res['nom'] . ' ' . $res['prenom']) ?></p>
+                    <p class="date">Du <?= htmlspecialchars($res['date_debut']) ?> au <?= htmlspecialchars($res['date_fin']) ?></p>
+                    <span class="button1" style="pointer-events: none;">Validée</span>
                 </div>
-            </div>
+            <?php endwhile; ?>
+        </div>
+    <?php else: ?>
+        <p>Aucune réservation validée pour le moment.</p>
+    <?php endif; ?>
+</div>
+
     </div>
   </main>
 
@@ -198,9 +218,6 @@ $result = $conn->query($sql);
   <div id="message-suppression" style="display: none;"></div>
 
 <div id="message-suppression" class="message" style="display: none;"></div>
-
-  
-
 
   <script>
     function showTab(tabId, btn) {
@@ -217,7 +234,6 @@ $result = $conn->query($sql);
 
     
   </script>
-  
 <script>
 window.addEventListener("load", () => {
   if (window.location.hash === "#annonces") {
@@ -236,6 +252,9 @@ window.addEventListener("load", () => {
   }
 });
 </script>
+ <?php 
 
+  $conn->close();
+  ?>
 </body>
 </html>
