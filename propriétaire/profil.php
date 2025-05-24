@@ -86,11 +86,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
 
 // Requête pour récupérer les réservations des annonces du propriétaire connecté
 $sql_reservations = "
-    SELECT r.*, a.titre, a.photos 
+    SELECT r.*, a.titre, a.photos, u.nom AS nom_locataire, u.prenom AS prenom_locataire
     FROM reservation r
     JOIN annonce a ON r.annonce_id = a.id
+    JOIN utilisateur u ON r.locataire_id = u.id
     WHERE a.proprietaire_id = ?
 ";
+
 $stmt_res = $conn->prepare($sql_reservations);
 $stmt_res->bind_param("i", $utilisateur_id);
 $stmt_res->execute();
@@ -220,12 +222,20 @@ if (isset($_GET['actualiser_annonce'])) {
                 <div class="image">
                     <img class="img" src="../annonces/<?= htmlspecialchars($imagePath) ?>" alt="img">
                 </div>
-                <p class="nom"><?= htmlspecialchars($reservation['titre']) ?></p>
-                <p class="date"><?= htmlspecialchars($reservation['date_reservation']) ?></p>
+                <div class="det">
+                <div class="det-reser">
+                <p class="nomm"><?= htmlspecialchars($reservation['titre']) ?></p>
+                <p class="nom1">Demande de réservation par :<?= htmlspecialchars($reservation['nom_locataire']) ?>&nbsp;<?= htmlspecialchars($reservation['prenom_locataire']) ?></p>
+                <p class="nom11">Du <?= htmlspecialchars($reservation['date_debut']) ?> au <?= htmlspecialchars($reservation['date_fin']) ?></p>
 
-                <div class="btnn">
+                </div>
+                <div class="v-a">
+                <p class="date"><?= htmlspecialchars($reservation['date_reservation']) ?></p>
+                <div class="btnn" style="margin-left: 15px;">
                     <button class="act" onclick="event.stopPropagation(); if(confirm('Annuler cette réservation ?')) { window.location.href='annule_reservation.php?id=<?= $reservation['id'] ?>'; }">Annuler</button>
                     <button class="act" onclick="event.stopPropagation(); if(confirm('Valider cette réservation ?')) { window.location.href='valide_reservation.php?id=<?= $reservation['id'] ?>'; }">Valider</button>
+                </div>
+                </div>
                 </div>
             </div>
         <?php endwhile; ?>

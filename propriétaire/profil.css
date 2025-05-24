@@ -240,6 +240,7 @@
   font-size: 16px;
   font-weight: bold;
   flex-grow: 1;
+  margin-right: 120px;
 }
 
     .btn-supp{
@@ -389,7 +390,7 @@
         color: aliceblue;
         border: none;
         cursor: pointer;
-        margin-right:20px;
+        margin-right:0px;
     }
     button:hover {
   background-color: rosybrown;
@@ -423,8 +424,49 @@
 }
 
 
+.nom1{
+    margin-top: -15px;
+    font-size: 15px;
+    color: #1e222ad5;
+}
+.nom11{
+    margin-top: -15px;
+    font-size: 15px;
+    color: #1e222ad5;
+    margin-bottom: 0px;
+}
 
-        
+.det {
+    display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: 20px; /* ajuste selon besoin */
+}
+
+.det-reser {
+    flex-grow: 1;
+    min-width: 0;
+    padding-top: -10px;
+}
+
+.v-a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+    
+
+}
+
+.nomm {
+  font-size: 16px;
+  font-weight: bold;
+  flex-grow: 1;
+  margin-right: 120px;
+  margin-top: 0px;
+}
     
 
 @keyframes fadeinout {
