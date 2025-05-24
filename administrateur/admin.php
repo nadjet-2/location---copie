@@ -64,7 +64,17 @@ $sql = "SELECT id, nom, prenom, photo FROM utilisateur
 $result = $conn->query($sql);
 
 
-
+ $reservations = $conn->query("
+    SELECT r.*, a.titre, a.photos,
+           loc.nom AS loc_nom, loc.prenom AS loc_prenom,
+           prop.nom AS prop_nom, prop.prenom AS prop_prenom
+    FROM reservation r
+    JOIN annonce a ON r.annonce_id = a.id
+    JOIN utilisateur loc ON r.locataire_id = loc.id
+    JOIN utilisateur prop ON a.proprietaire_id = prop.id
+    WHERE r.statut = 'valide'
+    ORDER BY r.id DESC
+");
 
 
 ?>
@@ -128,7 +138,7 @@ $result = $conn->query($sql);
           <div class="image">
             <img class="img" src="../annonces/<?= htmlspecialchars($row['photos']) ?>" alt="img">
           </div>
-          <p class="nom1"><?= htmlspecialchars($row['titre']) ?></p>
+          <p class="nom"><?= htmlspecialchars($row['titre']) ?></p>
           <a class="button1" href="admin.php?valider_id=<?= $row['id'] ?>#annonces" >Valider</a>
 <a href="admin.php?delete_annonce=<?= $row['id'] ?>#annonces" class="btn-supp" onclick="return confirm('Supprimer cette annonce ?')">
     <i class="fas fa-trash-alt"></i>
@@ -146,7 +156,13 @@ $result = $conn->query($sql);
  
   <h2 style="margin-top: 40px;">Toutes les annonces validées</h2>
   <?php
-  $sql2 = "SELECT * FROM annonce WHERE valide = 1 ORDER BY id DESC";
+$sql2 = "
+    SELECT a.*, u.nom AS prop_nom, u.prenom AS prop_prenom 
+    FROM annonce a
+    JOIN utilisateur u ON a.proprietaire_id = u.id
+    WHERE a.valide = 1
+    ORDER BY a.id DESC
+";
   $result2 = $conn->query($sql2);
 
   if ($result2->num_rows > 0): ?>
@@ -156,11 +172,16 @@ $result = $conn->query($sql);
           <div class="image">
             <img class="img" src="../annonces/<?= htmlspecialchars($row['photos']) ?>" alt="img">
           </div>
-          <p class="nom1"><?= htmlspecialchars($row['titre']) ?></p>
-          
-<a href="admin.php?delete_annonce=<?= $row['id'] ?>#annonces" class="btn-supp" onclick="return confirm('Supprimer cette annonce ?')">
-    <i class="fas fa-trash-alt"></i>
-</a>
+          <div class="det">
+            <div class="det-reser">
+          <p class="nom" style="margin-top: 1px;"><?= htmlspecialchars($row['titre']) ?></p>
+          <p class="nom1" style="margin-bottom: 0px;">Propriétaire : <?= htmlspecialchars($row['prop_nom'] . ' ' . $row['prop_prenom']) ?></p>
+          </div>
+
+          <a href="admin.php?delete_annonce=<?= $row['id'] ?>#annonces" class="btn-supp" onclick="return confirm('Supprimer cette annonce ?')">
+            <i class="fas fa-trash-alt"></i>
+          </a>
+          </div>
 
         </div>
  
@@ -184,17 +205,7 @@ $result = $conn->query($sql);
     <div id="reservations" class="tab">
     <h2>Réservations à validées</h2>
     <?php
-   $reservations = $conn->query("
-    SELECT r.*, a.titre, a.photos,
-           loc.nom AS loc_nom, loc.prenom AS loc_prenom,
-           prop.nom AS prop_nom, prop.prenom AS prop_prenom
-    FROM reservation r
-    JOIN annonce a ON r.annonce_id = a.id
-    JOIN utilisateur loc ON r.locataire_id = loc.id
-    JOIN utilisateur prop ON a.proprietaire_id = prop.id
-    WHERE r.statut = 'valide'
-    ORDER BY r.id DESC
-");
+   
 
 
     if ($reservations && $reservations->num_rows > 0): ?>
