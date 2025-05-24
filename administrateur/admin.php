@@ -199,7 +199,6 @@ $result = $conn->query($sql);
 
 <div id="message-suppression" class="message" style="display: none;"></div>
 
-<<<<<<< HEAD
   <style>
     body {
       margin: 0;
@@ -343,9 +342,7 @@ $result = $conn->query($sql);
     }
     
   </style>
-=======
- 
->>>>>>> f5c2588636913f9b18cc38b525f744d79a830392
+
 
   <script>
     function showTab(tabId, btn) {
