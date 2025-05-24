@@ -199,6 +199,7 @@ $result = $conn->query($sql);
 
 <div id="message-suppression" class="message" style="display: none;"></div>
 
+<<<<<<< HEAD
   <style>
     body {
       margin: 0;
@@ -344,6 +345,8 @@ $result = $conn->query($sql);
   </style>
 
 
+=======
+>>>>>>> 5cfe364757de54658563e6ccecd8b1ace150bcca
   <script>
     function showTab(tabId, btn) {
       // Masquer tous les contenus
