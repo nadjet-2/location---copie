@@ -217,6 +217,7 @@ $result = $conn->query($sql);
 
     
   </script>
+  
 <script>
 window.addEventListener("load", () => {
   if (window.location.hash === "#annonces") {
