@@ -138,4 +138,21 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.42);
     animation: fadeinout 3s ease forwards; 
     }
-    
+    .det {
+    display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: 20px; /* ajuste selon besoin */
+}
+
+.det-reser {
+    flex-grow: 1;
+    min-width: 0;
+    padding-top: -10px;
+}
+.nom1{
+    margin-top: -15px;
+    font-size: 15px;
+    color: #1e222ad5;
+}

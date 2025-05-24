@@ -181,16 +181,20 @@ $result = $conn->query($sql);
 
        
     <div id="reservations" class="tab">
-    <h2>Réservations validées</h2>
+    <h2>Réservations à validées</h2>
     <?php
-    $reservations = $conn->query("
-        SELECT r.*, a.titre, a.photos, u.nom, u.prenom 
-        FROM reservation r
-        JOIN annonce a ON r.annonce_id = a.id
-        JOIN utilisateur u ON r.locataire_id = u.id
-        WHERE r.statut = 'valide'
-        ORDER BY r.id DESC
-    ");
+   $reservations = $conn->query("
+    SELECT r.*, a.titre, a.photos,
+           loc.nom AS loc_nom, loc.prenom AS loc_prenom,
+           prop.nom AS prop_nom, prop.prenom AS prop_prenom
+    FROM reservation r
+    JOIN annonce a ON r.annonce_id = a.id
+    JOIN utilisateur loc ON r.locataire_id = loc.id
+    JOIN utilisateur prop ON a.proprietaire_id = prop.id
+    WHERE r.statut = 'valide'
+    ORDER BY r.id DESC
+");
+
 
     if ($reservations && $reservations->num_rows > 0): ?>
         <div class="ancs">
@@ -199,11 +203,18 @@ $result = $conn->query($sql);
                     <div class="image">
                         <img class="img" src="../annonces/<?= htmlspecialchars($res['photos']) ?>" alt="img">
                     </div>
-                    <p class="nom"><?= htmlspecialchars($res['titre']) ?></p>
-                    <p class="date">Par : <?= htmlspecialchars($res['nom'] . ' ' . $res['prenom']) ?></p>
-                    <p class="date">Du <?= htmlspecialchars($res['date_debut']) ?> au <?= htmlspecialchars($res['date_fin']) ?></p>
+                    <div class="det">
+                      <div class="det-reser">
+                        <p class="nom" style="margin-top: 0px;"><?= htmlspecialchars($res['titre']) ?></p>
+                        <p class="nom1">Locataire : <?= htmlspecialchars($res['loc_nom'] . ' ' . $res['loc_prenom']) ?></p>
+                        <p class="nom1" style="margin-bottom: 0px;">Propriétaire : <?= htmlspecialchars($res['prop_nom'] . ' ' . $res['prop_prenom']) ?></p>
+
+                      </div>
+
                     <span class="button1" style="pointer-events: none;">Validée</span>
+                  </div>
                 </div>
+
             <?php endwhile; ?>
         </div>
     <?php else: ?>
