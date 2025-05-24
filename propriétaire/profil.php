@@ -145,10 +145,9 @@ if (isset($_GET['actualiser_annonce'])) {
             <img  class="Logo" src="../images/Logo.png" alt="Logo">
         </div>
         
-        <div class="btn">      <a href="../annonces/annonce.php"><button class="creer">Créer une annonce</button></a>
-
-
-
+        <div class="btn">      
+            <a  href="../index.php"><button class="creer">Acceuil</button></a>
+            <a href="../annonces/annonce.php"><button class="creer">Créer une annonce</button></a>
             <button class="notification"><i class="fas fa-bell"></i></button>
             <div class="notif-menu" id="notifMenu">
                 <ul>

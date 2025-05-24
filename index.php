@@ -30,9 +30,14 @@ session_start();
   <?php if (isset($_SESSION['utilisateur']) && strtolower($_SESSION['utilisateur']['role']) === 'locataire'): ?>
     <a href="profil/locataire.php"><button class="button1"><i class="fas fa-user"></i></button></a>
   <?php else: ?>
+    <?php if (isset($_SESSION['utilisateur']) && strtolower($_SESSION['utilisateur']['role']) === 'proprietaire'): ?>
+    <a href="propriétaire/profil.php"><button class="button1"><i class="fas fa-user"></i></button></a>
+  <?php else: ?>
     <a href="logins/connexion.php"><button class="button1">Connexion</button></a>
     <a href="logins/formulaire.php"><button class="button2">Créer un compte</button></a>
   <?php endif; ?>
+  <?php endif; ?>
+
 </div>
 
   </nav>
