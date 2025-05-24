@@ -157,6 +157,7 @@ $result = $conn->query($sql);
             <img class="img" src="../annonces/<?= htmlspecialchars($row['photos']) ?>" alt="img">
           </div>
           <p class="nom1"><?= htmlspecialchars($row['titre']) ?></p>
+          
 <a href="admin.php?delete_annonce=<?= $row['id'] ?>#annonces" class="btn-supp" onclick="return confirm('Supprimer cette annonce ?')">
     <i class="fas fa-trash-alt"></i>
 </a>
