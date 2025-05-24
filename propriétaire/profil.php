@@ -84,6 +84,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     }
 }
 
+// Requête pour récupérer les réservations des annonces du propriétaire connecté
+$sql_reservations = "
+    SELECT r.*, a.titre, a.photos 
+    FROM reservation r
+    JOIN annonce a ON r.annonce_id = a.id
+    WHERE a.proprietaire_id = ?
+";
+$stmt_res = $conn->prepare($sql_reservations);
+$stmt_res->bind_param("i", $utilisateur_id);
+$stmt_res->execute();
+$result_reservations = $stmt_res->get_result();
+
+
+
+
+
+
+// Annonces à actualiser (créées il y a plus d’un mois)
+$sql_annonces_a_actualiser = "
+    SELECT * FROM annonce 
+    WHERE proprietaire_id = ? 
+    AND DATE(date_creation) <= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+";
+$stmt_actualisation = $conn->prepare($sql_annonces_a_actualiser);
+$stmt_actualisation->bind_param("i", $utilisateur_id);
+$stmt_actualisation->execute();
+$result_actualisation = $stmt_actualisation->get_result();
+
+
+if (isset($_GET['actualiser_annonce'])) {
+    $id = intval($_GET['actualiser_annonce']);
+    $stmt = $conn->prepare("UPDATE annonce SET date_creation = NOW() WHERE id = ? AND proprietaire_id = ?");
+    $stmt->bind_param("ii", $id, $utilisateur_id);
+    if ($stmt->execute()) {
+        header("Location: profil.php");
+        exit;
+    }
+}
 
 ?>
 
@@ -168,37 +206,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
 </div>
 </div>
 
- <div id="reservations" class="tab">
+<div id="reservations" class="tab">
     <div class="ancs">
-            <h3>Toutes les reservations</h3>
-        <div class="annonc" onclick="window.location.href='detail_bien.php';">
-             <div class="image">
-                       <img class="img" src="../images/273818788.jpg" alt="img">
-                    </div>
-                <p class="nom">Nom de l'annonce</p>
-                <p class="date">Date de l'annonce</p>
-                <div class="btnn">
-                <button class="act">Annuler</button>
-                <button class="act">Valider</button>
-                </div>
+        <h3>Toutes les réservations</h3>
 
-        </div>
+        <?php while ($reservation = $result_reservations->fetch_assoc()): ?>
+            <?php
+                $images = explode(',', $reservation['photos']);
+                $imagePath = $images[0] ?? '../images/default.jpg';
+            ?>
+            <div class="annonc" onclick="window.location.href='detail_bien.php?id=<?= $reservation['annonce_id'] ?>';">
+                <div class="image">
+                    <img class="img" src="../annonces/<?= htmlspecialchars($imagePath) ?>" alt="img">
+                </div>
+                <p class="nom"><?= htmlspecialchars($reservation['titre']) ?></p>
+                <p class="date"><?= htmlspecialchars($reservation['date_reservation']) ?></p>
+
+                <div class="btnn">
+                    <button class="act" onclick="event.stopPropagation(); if(confirm('Annuler cette réservation ?')) { window.location.href='annule_reservation.php?id=<?= $reservation['id'] ?>'; }">Annuler</button>
+                    <button class="act" onclick="event.stopPropagation(); if(confirm('Valider cette réservation ?')) { window.location.href='valide_reservation.php?id=<?= $reservation['id'] ?>'; }">Valider</button>
+                </div>
+            </div>
+        <?php endwhile; ?>
     </div>
 </div>
 
-        <div id="actualisations" class="tab">
-            <div class="ancs">
-        <h3>Annonces à actualisés</h3>
-                <div class="annonc">
-                   <div class="image">
-                       <img class="img" src="../images/273818788.jpg" alt="img">
-                    </div>
-                <p class="nom">Nom de l'annonce</p>
-                <p class="date">Date de l'annonce</p>
-                <button class="act">Actualiser</button>
+
+    <div id="actualisations" class="tab">
+    <div class="ancs">
+        <h3>Annonces à actualiser</h3>
+
+        <?php while ($annonce = $result_actualisation->fetch_assoc()): ?>
+            <?php
+                $images = explode(',', $annonce['photos']);
+                $imagePath = $images[0] ?? '../images/default.jpg';
+            ?>
+            <div class="annonc" onclick="window.location.href='detail_bien.php?id=<?= $annonce['id'] ?>';">
+                <div class="image">
+                    <img class="img" src="../annonces/<?= htmlspecialchars($imagePath) ?>" alt="img">
                 </div>
+                <p class="nom"><?= htmlspecialchars($annonce['titre']) ?></p>
+                <p class="date">Créée le : <?= htmlspecialchars(date('d/m/Y', strtotime($annonce['date_creation']))) ?></p>
+                <a href="profil.php?actualiser_annonce=<?= $annonce['id'] ?>" class="act" onclick="event.stopPropagation(); return confirm('Actualiser cette annonce ?');">Actualiser</a>
             </div>
-        </div>
+        <?php endwhile; ?>
+    </div>
+</div>
+
 
 
 </main>

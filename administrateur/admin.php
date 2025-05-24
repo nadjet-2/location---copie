@@ -227,7 +227,7 @@ $result = $conn->query($sql);
     .tab-nav button:hover,
     .tab-nav button.active {
       background: #374151;
-      font-size: 16.5px;
+      font-size: 18px;
 
     
     }

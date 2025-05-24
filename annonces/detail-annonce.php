@@ -1,6 +1,12 @@
 <?php
 session_start();
 ?>
+<?php if (isset($_SESSION['reservation_message'])): ?>
+  <div style="background-color: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 20px auto; max-width: 800px; text-align: center; font-weight: bold;">
+    <?= htmlspecialchars($_SESSION['reservation_message']) ?>
+  </div>
+  <?php unset($_SESSION['reservation_message']); ?>
+<?php endif; ?>
 
 <?php
 $host = 'localhost';
@@ -271,6 +277,10 @@ $conn->close();
       <input type="date" name="date_fin" required>
       <button type="submit" class="btn">Valider la réservation</button>
     </form>
+    <?php if (isset($_GET['message'])): ?>
+  <p style="color: green; text-align: center;"><?= htmlspecialchars($_GET['message']) ?></p>
+<?php endif; ?>
+
   </div>
 </div>
 <script>
