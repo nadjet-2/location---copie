@@ -4,6 +4,48 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
     header("Location: ../index.php");
     exit();
 }
+
+// Connexion à la base de données
+$host = 'localhost';
+$db   = 'location_immobiliere';
+$user = 'root';
+$pass = '';
+
+$conn = new mysqli($host, $user, $pass, $db);
+if ($conn->connect_error) {
+    die("Connexion échouée : " . $conn->connect_error);
+}
+
+$id = $_SESSION['utilisateur']['id'];
+
+$stmt = $conn->prepare("SELECT * FROM utilisateur WHERE id = ?");
+$stmt->bind_param("i", $id); // Liaison de paramètre (i = integer)
+$stmt->execute();
+
+$result = $stmt->get_result();
+$locataire = $result->fetch_assoc();
+
+if (!$locataire) {
+    echo "Utilisateur non trouvé.";
+    exit();
+}
+
+
+$reservations = [];
+
+$sql = "SELECT r.*, a.titre, a.photos, a.adresse
+        FROM reservation r
+        JOIN annonce a ON r.annonce_id = a.id
+        WHERE r.locataire_id = ?
+        ORDER BY r.date_reservation DESC";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    $reservations[] = $row;
+}
 ?>
 
 
@@ -26,7 +68,8 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
        
     <div class="nav-barre">
         <div >
-            <img  class="Logo" src="../images/Logo.png" alt="Logo">
+          <img src="../<?php echo htmlspecialchars($locataire['photo']); ?>" alt="Avatar" class="user-avatar">
+
         </div>
         <div class="auth">
             <a  href="../index.php"><button class="button1">Acceuil</button></a>
@@ -37,12 +80,14 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
     <div class="dashboard-container">
         <div class="dashboard-header">
             <div class="user-welcome">
-                <img src=" alt="class="user-avatar">
+                <img src="../logins/<?php echo htmlspecialchars($locataire['photo']); ?>" alt="Avatar" class="user-avatar">
+
                 <div class="user-info">
-                    <h1>Bonjour,</h1>
-                    <span class="user-type">
-                     Ameeelll
-                    </span>
+                    <h1>Bonjour, <?php echo htmlspecialchars($locataire['prenom']); ?> 👋</h1>
+           <span class="user-type">
+  <?php echo htmlspecialchars($locataire['role']); ?>
+</span>
+
                 </div>
             </div>
 
@@ -77,99 +122,54 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
                     <div class="card-content">
                             <div class="empty-state">
                                 <i class="fas fa-calendar-alt"></i>
-                                <h3>Aucune réservation</h3>
-                                <p>Vous n'avez pas encore effectué de réservation.</p>
+                                
                             </div>
                             <div class="booking-list">
                                
 
-                                    <div class="booking-item">
-                                        <img src="" alt="<" class="booking-image">
+                                    <?php if (empty($reservations)) : ?>
+    <div class="empty-state">
+        <i class="fas fa-calendar-alt"></i>
+        <h3>Aucune réservation</h3>
+        <p>Vous n'avez pas encore effectué de réservation.</p>
+    </div>
+<?php else : ?>
+    <div class="booking-list">
+        <?php foreach ($reservations as $res) : ?>
+            <div class="booking-item">
+                <img src="../annonces/<?php echo htmlspecialchars($res['photos'] ?? 'placeholder.jpg'); ?>" alt="Annonce" class="booking-image">
 
-                                        <div class="booking-details">
-                                            <div class="booking-title">Titre annonce</div>
+                <div class="booking-details">
+                    <div class="booking-title"><?php echo htmlspecialchars($res['titre']); ?></div>
 
-                                            <div class="booking-location">
-                                                <i class="fas fa-map-marker-alt"></i>
-                                            </div>
+                    <div class="booking-dates">
+                        <i class="fas fa-calendar"></i>
+                        Du <?php echo date('d/m/Y', strtotime($res['date_debut'])); ?>
+                        au <?php echo date('d/m/Y', strtotime($res['date_fin'])); ?>
+                    </div>
 
-                                            <div class="booking-dates">
-                                                <i class="fas fa-calendar"></i>
-                                            </div>
+                    <span class="booking-status"><?php echo htmlspecialchars($res['statut']); ?></span>
+                </div>
 
-                                            
+                <div class="booking-actions" style="display: flex; flex-direction: column; justify-content: center; padding: 0 15px;">
+                    <a href="#" class="btn-action btn-secondary" style="margin-bottom: 10px;">
+                        <i class="fas fa-eye"></i> Détails
+                    </a>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
 
-                                            <span class="booking-status" style="margin-left: -40px;">En attente
-                                            </span>
-                                        </div>
-
-                                        <div class="booking-actions" style="display: flex; flex-direction: column; justify-content: center; padding: 0 15px;">
-                                            <a href="" class="btn-action btn-secondary" style="margin-bottom: 10px;">
-                                                <i class="fas fa-eye"></i> Détails
-                                            </a>
-                                        </div>
-                                    </div>
                                      
                             </div>
-                             <div class="booking-list">
-                               
+                             
+                             
 
-                                    <div class="booking-item">
-                                        <img src="" alt="<" class="booking-image">
+                                   
+                           
 
-                                        <div class="booking-details">
-                                            <div class="booking-title">Titre annonce</div>
-
-                                            <div class="booking-location">
-                                                <i class="fas fa-map-marker-alt"></i>
-                                            </div>
-
-                                            <div class="booking-dates">
-                                                <i class="fas fa-calendar"></i>
-                                            </div>
-
-                                          
-
-                                            <span class="booking-status" style="margin-left: -40px;">Refuser
-                                            </span>
-                                        </div>
-
-                                        <div class="booking-actions" style="display: flex; flex-direction: column; justify-content: center; padding: 0 15px;">
-                                            <a href="" class="btn-action btn-secondary" style="margin-bottom: 10px;">
-                                                <i class="fas fa-eye"></i> Détails
-                                            </a>
-                                        </div>
-                                    </div>
-                                     
-                            </div>
-                             <div class="booking-list">
-                               
-
-                                    <div class="booking-item">
-                                        <img src="" alt="<" class="booking-image">
-
-                                        <div class="booking-details">
-                                            <div class="booking-title">Titre annonce</div>
-
-                                            <div class="booking-location">
-                                                <i class="fas fa-map-marker-alt"></i>
-                                            </div>
-
-                                            <div class="booking-dates">
-                                                <i class="fas fa-calendar"></i>
-                                            </div>
-
-                                            
-
-                                            <span class="booking-status" style="margin-left: -40px;">Accepter
-                                            </span>
-                                        </div>
-
-                                        <div class="booking-actions" style="display: flex; flex-direction: column; justify-content: center; padding: 0 15px;">
-                                            <a href="" class="btn-action btn-secondary" style="margin-bottom: 10px;">
-                                                <i class="fas fa-eye"></i> Détails
-                                            </a>
-                                        </div>
+                                       
                                     </div>
                                      
                             </div>
