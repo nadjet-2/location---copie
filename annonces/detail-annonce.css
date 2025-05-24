@@ -347,6 +347,9 @@ form button:hover {
    background-color: rosybrown;
   font-size:13.5px;
 }
+.hidden-avis {
+  display: none;
+}
 
 .scroll-btn {
   background-color:rgba(101, 103, 108, 0.58);

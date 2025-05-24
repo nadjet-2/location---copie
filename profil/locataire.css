@@ -1,4 +1,465 @@
-body{
-    color: red;
-    background-color: red;
+/* Reset de base */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+
+
+.nav-barre {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  padding: 0px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color:rgba(28, 42, 89, 0.89);
+  height: 65px;
+}
+
+.Logo {
+  width: 113px;
+  height: 80px;
+  cursor: pointer;
+  margin-top: -5px;
+}
+.button1, .button2 {
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: aliceblue;
+  background-color: #5D76A9;
+  cursor: pointer;
+  border: none;
+}
+button:hover {
+  background-color: rosybrown;
+  font-size:13.5px;
+
+}
+.auth{
+    padding: 15px 0px 20px;
+
+}
+
+.dashboard-container {
+  max-width: 1380px;
+ margin-left: 30px;
+  margin-right: 20px;
+  margin-top: 80px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+}
+
+.user-welcome {
+  display: flex;
+  align-items: center;
+}
+.user-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-right: 20px;
+  transition: transform 0.3s;
+}
+.user-avatar:hover {
+  transform: scale(1.05);
+}
+.user-info h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 15px;
+}
+.btn-action {
+  padding: 0.9rem 1.8rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary {
+  background: #e0e0e0;
+  color: #222;
+}
+.btn-secondary:hover {
+  background: #d0d0d0;
+}
+
+.dashboard-grid {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+.dashboard-main{
+      width: 1300px;
+      margin-left: 20px;
+      margin-right: 20px;
+
+}
+.dashboard-card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  flex: 1 1 350px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow 0.3s, transform 0.3s;
+  margin-bottom: 20px;
+  
+
+}
+.dashboard-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+}
+.card-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+.card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+}
+.card-action {
+  font-size: 0.9rem;
+  color: #ff385c;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.card-action:hover {
+  color: #e0314d;
+}
+.card-content {
+  padding: 20px;
+}
+
+
+
+/* Listes de réservations et avis */
+.booking-item,
+.review-item,
+.saved-item {
+  display: flex;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.booking-item:hover,
+.review-item:hover,
+.saved-item:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+.booking-image,
+.review-image,
+.saved-image {
+  width: 180px;
+
+  object-fit: cover;
+}
+.booking-details,
+.review-details,
+.saved-details {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.booking-title,
+.review-title,
+.saved-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.booking-location,
+.review-location,
+.saved-location {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 8px;
+}
+.booking-dates,
+.review-date,
+.saved-dates {
+  font-size: 0.8rem;
+  color: #999;
+  margin-bottom: 8px;
+}
+.booking-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 10px;
+  color: #ff385c;
+}
+.booking-status {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: all 0.2s;
+  max-width: 100px;
+}
+.status-pending {
+  background: #fff3e0;
+  color: #e65100;
+}
+.status-confirmed {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.status-cancelled {
+  background: #ffebee;
+  color: #c62828;
+}
+.status-completed {
+  background: #e0f2f1;
+  color: #00695c;
+}
+
+
+/* Boutons actions */
+
+.btn-primary {
+    background-color: rgb(207, 120, 120);
+  color: #fff;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.btn-danger {
+  background: #fff;
+  color: #c62828;
+  border: 1px solid #c62828;
+}
+.btn-danger:hover {
+  background: #ffebee;
+}
+
+/* Responsive général */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    flex-direction: column;
+  }
+  .booking-item,
+  .review-item {
+    flex-direction: column;
+  }
+  .booking-image,
+  .review-image {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* Footer moderne et élégant */
+footer {
+  background: #fff;
+  color: #999;
+  padding: 50px 20px;
+  margin-top: 40px;
+  font-family: "Nunito", sans-serif;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1200px;
+  gap: 30px;
+}
+
+
+
+
+
+/* Image de profil */
+.avatar-preview {
+  display: block;
+  margin: 15px auto;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ddd;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.avatar-preview:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+  .form-wrapper {
+    padding: 20px;
+  }
+  .page-title {
+    font-size: 2rem;
+  }
+  .btn-submit {
+    font-size: 1rem;
+  }
+}
+
+
+/* État vide */
+.empty-state {
+  text-align: center;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.empty-state i {
+  font-size: 3rem;
+  color: #f59e0b;
+  margin-bottom: 1rem;
+}
+.empty-state h3 {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.empty-state p {
+  color: #555;
+  font-size: 0.8rem;
+}
+
+/* Liste des avis */
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.review-date {
+  font-size: 0.9rem;
+  color: #999;
+}
+.review-rating {
+  margin-bottom: 1rem;
+}
+.review-rating i {
+  font-size: 1.2rem;
+  margin-right: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-barre {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+  .logo-container img {
+    height: 40px;
+  }
+  .button1 {
+    width: 100%;
+    text-align: center;
+  }
+}
+.dashboard-sidebar {
+  width: 300px;
+}
+
+/* Titre de la section */
+.dashboard-card .card-header {
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.notification-list {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Style pour chaque notification */
+.notification-item {
+  background-color: #f9f9f9;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.notification-item:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+.notification-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #222;
+}
+
+.notification-message {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.notification-time {
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 6px;
+  text-align: right;
 }
