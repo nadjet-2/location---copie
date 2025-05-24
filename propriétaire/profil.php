@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
 
 // Requête pour récupérer les réservations des annonces du propriétaire connecté
 $sql_reservations = "
-    SELECT r.*, a.titre, a.photos, u.nom AS nom_locataire, u.prenom AS prenom_locataire
+    SELECT r.*, a.titre, a.photos, u.prenom AS loc_prenom, u.nom AS loc_nom, u.role AS loc_role
     FROM reservation r
     JOIN annonce a ON r.annonce_id = a.id
     JOIN utilisateur u ON r.locataire_id = u.id
@@ -148,6 +148,9 @@ if (isset($_GET['actualiser_annonce'])) {
         <div class="btn">      
             <a  href="../index.php"><button class="creer">Acceuil</button></a>
             <a href="../annonces/annonce.php"><button class="creer">Créer une annonce</button></a>
+
+
+
             <button class="notification"><i class="fas fa-bell"></i></button>
             <div class="notif-menu" id="notifMenu">
                 <ul>
@@ -223,9 +226,9 @@ if (isset($_GET['actualiser_annonce'])) {
                 </div>
                 <div class="det">
                 <div class="det-reser">
-                <p class="nomm"><?= htmlspecialchars($reservation['titre']) ?></p>
-                <p class="nom1">Demande de réservation par :<?= htmlspecialchars($reservation['nom_locataire']) ?>&nbsp;<?= htmlspecialchars($reservation['prenom_locataire']) ?></p>
-                <p class="nom11">Du <?= htmlspecialchars($reservation['date_debut']) ?> au <?= htmlspecialchars($reservation['date_fin']) ?></p>
+                <p class="nom" style="margin-top: 0;"><?= htmlspecialchars($reservation['titre']) ?></p>
+                <p class="nom1">Demande de réservations par : <?= htmlspecialchars($reservation['loc_nom']) ?> <?= htmlspecialchars($reservation['loc_prenom']) ?> </p>
+                <p class="nom1" style="margin-bottom: 0;">Du <?= htmlspecialchars($reservation['date_debut']) ?> au <?= htmlspecialchars($reservation['date_fin']) ?></p>
 
                 </div>
                 <div class="v-a">

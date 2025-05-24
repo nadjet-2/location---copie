@@ -87,7 +87,7 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
                                         <img src="" alt="<" class="booking-image">
 
                                         <div class="booking-details">
-                                            <div class="booking-title"></div>
+                                            <div class="booking-title">Titre annonce</div>
 
                                             <div class="booking-location">
                                                 <i class="fas fa-map-marker-alt"></i>
@@ -97,8 +97,7 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
                                                 <i class="fas fa-calendar"></i>
                                             </div>
 
-                                            <div class="booking-price">
-                                            </div>
+                                            
 
                                             <span class="booking-status" style="margin-left: -40px;">En attente
                                             </span>
@@ -119,7 +118,7 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
                                         <img src="" alt="<" class="booking-image">
 
                                         <div class="booking-details">
-                                            <div class="booking-title"></div>
+                                            <div class="booking-title">Titre annonce</div>
 
                                             <div class="booking-location">
                                                 <i class="fas fa-map-marker-alt"></i>
@@ -129,8 +128,7 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
                                                 <i class="fas fa-calendar"></i>
                                             </div>
 
-                                            <div class="booking-price">
-                                            </div>
+                                          
 
                                             <span class="booking-status" style="margin-left: -40px;">Refuser
                                             </span>
@@ -151,7 +149,7 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
                                         <img src="" alt="<" class="booking-image">
 
                                         <div class="booking-details">
-                                            <div class="booking-title"></div>
+                                            <div class="booking-title">Titre annonce</div>
 
                                             <div class="booking-location">
                                                 <i class="fas fa-map-marker-alt"></i>
@@ -161,8 +159,7 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
                                                 <i class="fas fa-calendar"></i>
                                             </div>
 
-                                            <div class="booking-price">
-                                            </div>
+                                            
 
                                             <span class="booking-status" style="margin-left: -40px;">Accepter
                                             </span>
@@ -198,7 +195,7 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
                                         <img src="" alt="" class="review-image">
 
                                         <div class="review-details">
-                                            <div class="review-title"></div>
+                                            <div class="review-title">Titre annonce</div>
 
                                             <div class="review-location">
                                                 <i class="fas fa-map-marker-alt"></i>
@@ -238,30 +235,36 @@ if (!isset($_SESSION['utilisateur']) || strtolower($_SESSION['utilisateur']['rol
                                 <p>Vous n'avez pas encore sauvgarder des annonces.</p>
                             </div>
                             <div class="saved-list" >
-                               
+                                <div class="review-list">
+                                
+                                    <div class="review-item">
+                                        <img src="" alt="" class="review-image">
 
-                                    <div class="saved-item" >
-                                        <img src="" alt="" class="saved-image">
+                                        <div class="review-details">
+                                            <div class="review-title">Titre annonce</div>
 
-                                        <div class="saved-details">
-                                            <div class="saved-title"></div>
-
-                                            <div class="saved-location">
+                                            <div class="review-location">
                                                 <i class="fas fa-map-marker-alt"></i>
                                             </div>
 
-                                            <div class="saved-dates">
+                                            <div class="review-date">
                                                 <i class="fas fa-calendar"></i>
-                                                annonce sauvegarder le : 
+                                                Annonce sauvegarder le :  
                                             </div>
+
+                                            
                                         </div>
 
-                                        <div class="saved-actions" style="display: flex; flex-direction: column; justify-content: center; padding: 0 15px;">
-                                            <a href="" class="btn-action btn-secondary" style="margin-bottom: 10px;">
-                                                <i class="fas fa-eye"></i> Détails
+                                        <div class="review-actions" style="display: flex; flex-direction: column; justify-content: center; padding: 0 15px;">
+                                            <a href="" class="btn-action btn-secondary">
+                                                <i class="fas fa-eye"></i> Voir
                                             </a>
                                         </div>
                                     </div>
+                                    
+                            </div>
+
+                                   
                                      
                             </div>
                     </div>
