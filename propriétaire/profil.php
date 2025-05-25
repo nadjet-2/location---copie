@@ -125,6 +125,32 @@ if (isset($_GET['actualiser_annonce'])) {
     }
 }
 
+
+
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+if ($search !== '') {
+    $sql_annonces = "
+        SELECT * FROM annonce 
+        WHERE proprietaire_id = ?
+        AND (
+            SOUNDEX(adresse) = SOUNDEX(?) 
+            OR adresse LIKE ? 
+            OR titre LIKE ?
+        )
+    ";
+    $like = '%' . $search . '%';
+    $stmt = $conn->prepare($sql_annonces);
+    $stmt->bind_param("isss", $utilisateur_id, $search, $like, $like);
+} else {
+    $sql_annonces = "SELECT * FROM annonce WHERE proprietaire_id = ?";
+    $stmt = $conn->prepare($sql_annonces);
+    $stmt->bind_param("i", $utilisateur_id);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
+
 ?>
 
 
@@ -176,7 +202,8 @@ if (isset($_GET['actualiser_annonce'])) {
     <div id="annonces" class="tab">
 
     <div id="Rechercher" class="barre-de-recherche">
-            <input class="bdr" type="text" action="propriétaire/recherche.php" method="GET" placeholder="Rechercher" />
+           <input class="bdr" type="text" id="searchInput" placeholder="Rechercher par adresse..." />
+
         </div>
 
         <div class="text">
@@ -454,6 +481,20 @@ document.getElementById('cancelEdit').addEventListener('click', function () {
 </script>
 
 
+<script>
+document.getElementById('searchInput').addEventListener('input', function() {
+    const keyword = this.value;
+
+    fetch('profil.php?search=' + encodeURIComponent(keyword))
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const annonces = doc.querySelector('#annonces .ancs').innerHTML;
+            document.querySelector('#annonces .ancs').innerHTML = annonces;
+        });
+});
+</script>
 
 
 
