@@ -67,9 +67,8 @@ while ($row = $result->fetch_assoc()) {
     
        
     <div class="nav-barre">
-        <div >
-          <img src="../<?php echo htmlspecialchars($locataire['photo']); ?>" alt="Avatar" class="user-avatar">
-
+        <div>
+          <img class="Logo" src="../images/Logo.png" alt="Logo" />
         </div>
         <div class="auth">
             <a  href="../index.php"><button class="button1">Acceuil</button></a>
@@ -152,9 +151,10 @@ while ($row = $result->fetch_assoc()) {
                 </div>
 
                 <div class="booking-actions" style="display: flex; flex-direction: column; justify-content: center; padding: 0 15px;">
-                    <a href="#" class="btn-action btn-secondary" style="margin-bottom: 10px;">
-                        <i class="fas fa-eye"></i> Détails
+                    <a href="../annonces/detail-annonce.php?id=<?= $res['annonce_id'] ?>" class="btn-action btn-secondary" style="margin-bottom: 10px;">
+                       <i class="fas fa-eye"></i> Détails
                     </a>
+
                 </div>
             </div>
         <?php endforeach; ?>
