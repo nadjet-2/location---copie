@@ -46,6 +46,24 @@ $result = $stmt->get_result();
 while ($row = $result->fetch_assoc()) {
     $reservations[] = $row;
 }
+
+$avis = [];
+
+$sqlAvis = "SELECT av.*, a.titre, a.photos, a.adresse
+            FROM avis av
+            JOIN annonce a ON av.annonce_id = a.id
+            WHERE av.locataire_id = ?
+            ORDER BY av.date_avis DESC";
+
+$stmtAvis = $conn->prepare($sqlAvis);
+$stmtAvis->bind_param("i", $id);
+$stmtAvis->execute();
+$resultAvis = $stmtAvis->get_result();
+
+while ($row = $resultAvis->fetch_assoc()) {
+    $avis[] = $row;
+}
+
 ?>
 
 
@@ -103,11 +121,6 @@ while ($row = $result->fetch_assoc()) {
             </div>
         </div>
 
-
-
-
-
-
         <div class="dashboard-grid">
             <div class="dashboard-main">
                 
@@ -118,85 +131,70 @@ while ($row = $result->fetch_assoc()) {
                         <a href="javascript:void(0);" class="card-action" id="showAllBookings">Voir tout</a>
                     </div>
 
-                    <div class="card-content">
-                            
+                    <div class="card-content">                          
                             <div class="booking-list">
-                               
+                            <?php if (empty($reservations)) : ?>
+                                <div class="empty-state">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <h3>Aucune réservation</h3>
+                                    <p>Vous n'avez pas encore effectué de réservation.</p>
+                                </div>
+                                <?php else : ?>
+                                <div class="booking-list">
+                                    <?php foreach ($reservations as $res) : ?>
+                                    <div class="booking-item">
+                                        <img src="../annonces/<?php echo htmlspecialchars($res['photos'] ?? 'placeholder.jpg'); ?>" alt="Annonce" class="booking-image">
 
-                                    <?php if (empty($reservations)) : ?>
-    <div class="empty-state">
-        <i class="fas fa-calendar-alt"></i>
-        <h3>Aucune réservation</h3>
-        <p>Vous n'avez pas encore effectué de réservation.</p>
-    </div>
-<?php else : ?>
-    <div class="booking-list">
-        <?php foreach ($reservations as $res) : ?>
-            <div class="booking-item">
-                <img src="../annonces/<?php echo htmlspecialchars($res['photos'] ?? 'placeholder.jpg'); ?>" alt="Annonce" class="booking-image">
+                                        <div class="booking-details">
+                                            <div class="booking-title"><?php echo htmlspecialchars($res['titre']); ?></div>
 
-                <div class="booking-details">
-                    <div class="booking-title"><?php echo htmlspecialchars($res['titre']); ?></div>
+                                                <div class="booking-dates">
+                                                    <i class="fas fa-calendar"></i>
+                                                    Du <?php echo date('d/m/Y', strtotime($res['date_debut'])); ?>
+                                                    au <?php echo date('d/m/Y', strtotime($res['date_fin'])); ?>
+                                                </div>
+                                                <?php 
+                                                $statutClasse = '';
+                                                $statutAffiche = '';
+                                                switch (strtolower($res['statut'])) {
+                                                    case 'annulé':
+                                                    case 'annule':
+                                                        $statutAffiche = 'Refusé';
+                                                        $statutClasse = 'Refuse';
+                                                    break;
+                                                    case 'en attente':
+                                                        $statutAffiche = 'En attente';
+                                                        $statutClasse = 'EnAttente';
+                                                    break;
+                                                    case 'validé':  
+                                                    case 'valide':
+                                                        $statutAffiche = 'Validé';
+                                                        $statutClasse = 'Valide'; 
+                                                    break;
+                                                    default:
+                                                        $statutAffiche = htmlspecialchars($res['statut']);
+                                                        $statutClasse = '';
+                                                        break;
+                                                    }
+                                                ?>
+                                                <span class="booking-status <?= $statutClasse ?>"><?= $statutAffiche ?></span>
+                                            </div>
 
-                    <div class="booking-dates">
-                        <i class="fas fa-calendar"></i>
-                        Du <?php echo date('d/m/Y', strtotime($res['date_debut'])); ?>
-                        au <?php echo date('d/m/Y', strtotime($res['date_fin'])); ?>
+                                            <div class="booking-actions" style="display: flex; flex-direction: column; justify-content: center; padding: 0 15px;">
+                                                <a href="../annonces/detail-annonce.php?id=<?= $res['annonce_id'] ?>" class="btn-action btn-secondary" style="margin-bottom: 10px;">
+                                                <i class="fas fa-eye"></i> Détails
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <?php endif; ?>                                    
+                                </div>   
+                            </div>
+                                     
                     </div>
-
-<?php 
-    $statutClasse = '';
-    $statutAffiche = '';
-
-    switch (strtolower($res['statut'])) {
-        case 'annulé':
-        case 'annule':
-            $statutAffiche = 'Refusé';
-            $statutClasse = 'Refuse';
-            break;
-        case 'en attente':
-            $statutAffiche = 'En attente';
-            $statutClasse = 'EnAttente';
-            break;
-        case 'validé':  
-        case 'valide':
-        $statutAffiche = 'Validé';
-        $statutClasse = 'Valide'; 
-        break;
-        default:
-            $statutAffiche = htmlspecialchars($res['statut']);
-            $statutClasse = '';
-            break;
-    }
-?>
-<span class="booking-status <?= $statutClasse ?>"><?= $statutAffiche ?></span>
-                </div>
-
-                <div class="booking-actions" style="display: flex; flex-direction: column; justify-content: center; padding: 0 15px;">
-                    <a href="../annonces/detail-annonce.php?id=<?= $res['annonce_id'] ?>" class="btn-action btn-secondary" style="margin-bottom: 10px;">
-                       <i class="fas fa-eye"></i> Détails
-                    </a>
-
                 </div>
             </div>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
-
-                                     
-                            </div>
-                             
-                             
-
-                                   
-                           
-
-                                       
-                                    </div>
-                                     
-                            </div>
-                    </div>
-                </div>
                
 
                 <div class="dashboard-card" id="Reviews">
@@ -206,44 +204,57 @@ while ($row = $result->fetch_assoc()) {
                     </div>
 
                     <div class="card-content">
-                            <div class="empty-state">
-                                <i class="fas fa-star"></i>
-                                <h3>Aucun avis</h3>
-                                <p>Vous n'avez pas encore laissé d'avis.</p>
-                            </div>
+                            
                             <div class="review-list">
-                                
+                                 <?php if (empty($avis)) : ?>
+                                <div class="empty-state">
+                                    <i class="fas fa-star"></i>
+                                    <h3>Aucun avis</h3>
+                                    <p>Vous n'avez pas encore laissé d'avis</p>
+                                </div>
+                                <?php else : ?>
+                                    <div class="review-list">
+                                    <?php foreach ($avis as $res) : ?>
                                     <div class="review-item">
-                                        <img src="" alt="" class="review-image">
+                                        <img src="../annonces/<?php echo htmlspecialchars($res['photos'] ?? 'placeholder.jpg'); ?>" alt="Annonce" class="review-image">
 
                                         <div class="review-details">
-                                            <div class="review-title">Titre annonce</div>
-
-                                            <div class="review-location">
-                                                <i class="fas fa-map-marker-alt"></i>
-                                            </div>
+                                            <div class="review-title"><?php echo htmlspecialchars($res['titre']); ?></div>
+                                                <div class="review-location">
+                                                    <i class="fas fa-map-marker-alt"></i>
+                                                    <?php echo htmlspecialchars($res['adresse']); ?>
+                                                </div>
 
                                             <div class="review-date">
                                                 <i class="fas fa-calendar"></i>
-                                                Avis laissé le : 
+                                                Avis laissé le : <?php echo date('d/m/Y', strtotime($res['date_avis'])); ?>
                                             </div>
 
                                             <div class="review-rating">
-                                               
+                                                <?php for ($i = 1; $i <= 5; $i++) : ?>
+                                                <i class="fas fa-star<?= $i <= $res['note'] ? '' : '-o' ?>"></i>
+                                                <?php endfor; ?>
                                             </div>
                                         </div>
 
                                         <div class="review-actions" style="display: flex; flex-direction: column; justify-content: center; padding: 0 15px;">
-                                            <a href="" class="btn-action btn-secondary">
+                                            <a href="../annonces/detail-annonce.php?id=<?= $res['annonce_id'] ?>" class="btn-action btn-secondary" style="margin-bottom: 10px;">
+
                                                 <i class="fas fa-eye"></i> Voir
-                                            </a>
+                                             </a>
+                                            </div>
                                         </div>
+                                        <?php endforeach; ?>
                                     </div>
-                                    
+                                    <?php endif; ?>                                    
+                                </div>   
                             </div>
+                                     
                     </div>
                 </div>
+            </div>
 
+                
                  <div class="dashboard-card" id="Reservations">
                     <div class="card-header" >
                         <h2 class="card-title" >Annonces sauvgardées</h2>
@@ -285,6 +296,7 @@ while ($row = $result->fetch_assoc()) {
                                     </div>
                                     
                             </div>
+                            
 
                                    
                                      

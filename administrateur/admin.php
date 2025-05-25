@@ -223,7 +223,7 @@ $sql2 = "
 
                       </div>
 
-                    <span class="button1" style="pointer-events: none; margin-right:12px;">Validée</span>
+                    <span class="button1" style="pointer-events: none; margin-right:12px;">Valider</span>
                   </div>
                 </div>
 
