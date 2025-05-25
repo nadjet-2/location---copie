@@ -390,7 +390,7 @@
         color: aliceblue;
         border: none;
         cursor: pointer;
-        margin-right:0px;
+        margin-right:20px;
     }
     button:hover {
   background-color: rosybrown;
@@ -468,6 +468,24 @@
   margin-top: 0px;
 }
     
+.statut {
+  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-top: 18px;
+  font-weight: bold;
+}
+
+.statut-publie {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.statut-attente {
+  background-color: #fff3cd;
+  color: #856404;
+}
 
 @keyframes fadeinout {
     0% { opacity: 0; }

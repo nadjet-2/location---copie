@@ -463,3 +463,21 @@ footer {
   margin-top: 6px;
   text-align: right;
 }
+.booking-status {
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.booking-status.Refuse {
+  background-color: #f8d7da;
+  color: #842029;
+}
+.booking-status.EnAttente {
+  background-color: #fff3cd;
+  color: #856404;
+}
+.booking-status.Valide {
+  background-color: #52da4d;
+  color: #256823;
+}

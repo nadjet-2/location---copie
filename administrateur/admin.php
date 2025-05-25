@@ -15,7 +15,7 @@ if ($conn->connect_error) die("Erreur de connexion : " . $conn->connect_error);
 // Valider une annonce
 if (isset($_GET['valider_id'])) {
     $id = intval($_GET['valider_id']);
-    $conn->query("UPDATE annonce SET valide = 1 WHERE id = $id");
+    $conn->query("UPDATE annonce SET valide = 1, statut = 'publie' WHERE id = $id");
     header("Location: admin.php#annonces");
     exit;
 }
@@ -203,7 +203,7 @@ $sql2 = "
 
        
     <div id="reservations" class="tab">
-    <h2>Réservations à validées</h2>
+    <h2>Réservations à validées le payement</h2>
     <?php
    
 
@@ -223,7 +223,7 @@ $sql2 = "
 
                       </div>
 
-                    <span class="button1" style="pointer-events: none;">Validée</span>
+                    <span class="button1" style="pointer-events: none; margin-right:12px;">Validée</span>
                   </div>
                 </div>
 

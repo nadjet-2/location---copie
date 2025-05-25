@@ -82,10 +82,10 @@ while ($row = $result->fetch_assoc()) {
                 <img src="../logins/<?php echo htmlspecialchars($locataire['photo']); ?>" alt="Avatar" class="user-avatar">
 
                 <div class="user-info">
-                    <h1>Bonjour, <?php echo htmlspecialchars($locataire['prenom']); ?> 👋</h1>
-           <span class="user-type">
-  <?php echo htmlspecialchars($locataire['role']); ?>
-</span>
+                   <h1>Bonjour, <?php echo htmlspecialchars($locataire['prenom']) . '&nbsp;' . htmlspecialchars($locataire['nom']); ?> 👋</h1>
+                   <span class="user-type">
+                   <?php echo htmlspecialchars($locataire['role']); ?>
+                    </span>
 
                 </div>
             </div>
@@ -119,10 +119,7 @@ while ($row = $result->fetch_assoc()) {
                     </div>
 
                     <div class="card-content">
-                            <div class="empty-state">
-                                <i class="fas fa-calendar-alt"></i>
-                                
-                            </div>
+                            
                             <div class="booking-list">
                                
 
@@ -147,7 +144,32 @@ while ($row = $result->fetch_assoc()) {
                         au <?php echo date('d/m/Y', strtotime($res['date_fin'])); ?>
                     </div>
 
-                    <span class="booking-status"><?php echo htmlspecialchars($res['statut']); ?></span>
+<?php 
+    $statutClasse = '';
+    $statutAffiche = '';
+
+    switch (strtolower($res['statut'])) {
+        case 'annulé':
+        case 'annule':
+            $statutAffiche = 'Refusé';
+            $statutClasse = 'Refuse';
+            break;
+        case 'en attente':
+            $statutAffiche = 'En attente';
+            $statutClasse = 'EnAttente';
+            break;
+        case 'validé':  
+        case 'valide':
+        $statutAffiche = 'Validé';
+        $statutClasse = 'Valide'; 
+        break;
+        default:
+            $statutAffiche = htmlspecialchars($res['statut']);
+            $statutClasse = '';
+            break;
+    }
+?>
+<span class="booking-status <?= $statutClasse ?>"><?= $statutAffiche ?></span>
                 </div>
 
                 <div class="booking-actions" style="display: flex; flex-direction: column; justify-content: center; padding: 0 15px;">

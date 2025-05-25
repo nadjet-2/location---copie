@@ -54,6 +54,17 @@ while ($row = $resultAvis->fetch_assoc()) {
     $avis[] = $row;
 }
 
+$reservation = null;
+
+if (isset($_SESSION['utilisateur']) && strtolower($_SESSION['utilisateur']['role']) === 'locataire') {
+    $sqlRes = "SELECT * FROM reservation WHERE annonce_id = ? AND statut = 'valide' LIMIT 1";
+    $stmtRes = $conn->prepare($sqlRes);
+    $stmtRes->bind_param("i", $id);
+    $stmtRes->execute();
+    $resultRes = $stmtRes->get_result();
+    $reservation = $resultRes->fetch_assoc();
+    $stmtRes->close();
+}
 
 
 
@@ -81,7 +92,16 @@ $conn->close();
 
   </nav>
 
-       
+        <?php if ($reservation): ?>
+  <?php
+    $now = date('Y-m-d');
+    if ($reservation['date_fin'] >= $now):
+  ?>
+    <div class="reservation-dates" style="margin: -40px 0px 50px 0px; padding: 10px; background: #f0f0f0; border-radius: 5px;">
+      <strong>Ce logement est réservé du <?= htmlspecialchars($reservation['date_debut']) ?> au <?= htmlspecialchars($reservation['date_fin']) ?>.</strong>
+    </div>
+  <?php endif; ?>
+<?php endif; ?>
   <div class="titre">
   <h1><?= htmlspecialchars($annonce['titre']) ?></h1>
 </div>
@@ -184,7 +204,17 @@ $conn->close();
       
        
   <?php if (isset($_SESSION['utilisateur']) && strtolower($_SESSION['utilisateur']['role']) === 'locataire'): ?>
-    <button class="btn" id="ouvrirModal">Réserver</button>
+<?php
+  $canReserve = true;
+  if ($reservation && $reservation['date_fin'] >= date('Y-m-d')) {
+      $canReserve = false;
+  }
+?>
+<?php if ($canReserve): ?>
+  <button class="btn" id="ouvrirModal">Réserver</button>
+<?php else: ?>
+  <button class="btn" disabled style="opacity: 0.6;">Déjà réservé</button>
+<?php endif; ?>
   <?php else: ?>
     <button class="btn" onclick="alert('S’il vous plaît créez un compte ou connectez-vous comme locataire pour réserver.');">Réserver</button>
   <?php endif; ?>
@@ -193,6 +223,9 @@ $conn->close();
         
     </div>
     </div>
+
+   
+
 
    <section class="testimonial-section">
     <h2>Que disent nos clients ?</h2>
@@ -226,7 +259,7 @@ $conn->close();
     <?php if (isset($_SESSION['utilisateur']) && strtolower($_SESSION['utilisateur']['role']) === 'locataire'): ?>
   <form id="testimonial-form" method="post" action="ajouter_avis.php">
     <input type="hidden" name="id_annonce" value="<?= htmlspecialchars($annonce['id']) ?>">
-    <input type="text" name="nom" placeholder="Nom" required />
+    <input type="text" name="nom" placeholder="Nom" value="<?= htmlspecialchars($_SESSION['utilisateur']['nom'] . ' ' . $_SESSION['utilisateur']['prenom']) ?>" required readonly />
     <input type="number" name="note" min="1" max="5" step="0.1" placeholder="Note (1-5)" required />
     <textarea name="commentaire" placeholder="Votre avis" required></textarea>
     <button  type="submit">Publier l'avis</button>

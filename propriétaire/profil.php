@@ -176,7 +176,7 @@ if (isset($_GET['actualiser_annonce'])) {
     <div id="annonces" class="tab">
 
     <div id="Rechercher" class="barre-de-recherche">
-            <input class="bdr" type="text" placeholder="Rechercher" />
+            <input class="bdr" type="text" action="propriétaire/recherche.php" method="GET" placeholder="Rechercher" />
         </div>
 
         <div class="text">
@@ -202,6 +202,13 @@ if (isset($_GET['actualiser_annonce'])) {
             <img class="img" src="../annonces/<?= htmlspecialchars($imagePath) ?>" alt="img">
         </div>
         <p class="nom"><?= htmlspecialchars($annonce['titre']) ?></p>
+        <?php
+    $statut = $annonce['statut'];
+    $classeStatut = $statut === 'publie' ? 'statut-publie' : 'statut-attente';
+    $texteStatut = $statut === 'publie' ? 'Publié' : 'En attente';
+?>
+<p class="statut <?= $classeStatut ?>"><?= $texteStatut ?></p>
+
         
         <a href="profil.php?delete_annonce=<?= $annonce['id'] ?>#annonces" class="btn-supp" onclick="return confirm('Supprimer cette annonce ?')">
     <i class="fas fa-trash-alt"></i>
