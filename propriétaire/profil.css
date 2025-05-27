@@ -486,6 +486,17 @@
   background-color: #fff3cd;
   color: #856404;
 }
+.badge-validée {
+    display: inline-block;
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
 
 @keyframes fadeinout {
     0% { opacity: 0; }

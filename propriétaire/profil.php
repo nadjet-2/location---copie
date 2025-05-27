@@ -103,11 +103,11 @@ $result_reservations = $stmt_res->get_result();
 
 
 
-// Annonces à actualiser (créées il y a plus d’un mois)
+// Annonces à actualiser (créées il y a plus de 5 minutes)
 $sql_annonces_a_actualiser = "
     SELECT * FROM annonce 
     WHERE proprietaire_id = ? 
-    AND DATE(date_creation) <= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+    AND DATE_ADD(date_creation, INTERVAL 5 MINUTE) <= NOW()
 ";
 $stmt_actualisation = $conn->prepare($sql_annonces_a_actualiser);
 $stmt_actualisation->bind_param("i", $utilisateur_id);
@@ -115,12 +115,13 @@ $stmt_actualisation->execute();
 $result_actualisation = $stmt_actualisation->get_result();
 
 
+
 if (isset($_GET['actualiser_annonce'])) {
     $id = intval($_GET['actualiser_annonce']);
     $stmt = $conn->prepare("UPDATE annonce SET date_creation = NOW() WHERE id = ? AND proprietaire_id = ?");
     $stmt->bind_param("ii", $id, $utilisateur_id);
     if ($stmt->execute()) {
-        header("Location: profil.php");
+        header("Location: profil.php#actualisations");
         exit;
     }
 }
@@ -268,8 +269,13 @@ $result = $stmt->get_result();
                 <div class="v-a">
                 <p class="date"><?= htmlspecialchars($reservation['date_reservation']) ?></p>
                 <div class="btnn" style="margin-left: 15px;">
-                    <button class="act" onclick="event.stopPropagation(); if(confirm('Annuler cette réservation ?')) { window.location.href='annule_reservation.php?id=<?= $reservation['id'] ?>'; }">Annuler</button>
-                    <button class="act" onclick="event.stopPropagation(); if(confirm('Valider cette réservation ?')) { window.location.href='valide_reservation.php?id=<?= $reservation['id'] ?>'; }">Valider</button>
+              
+                    <?php if ($reservation['statut'] !== 'valide'): ?>
+    <button class="act" onclick="event.stopPropagation(); if(confirm('Valider cette réservation ?')) { window.location.href='valide_reservation.php?id=<?= $reservation['id'] ?>'; }">Valider</button>
+<?php else: ?>
+    <span class="badge-validée">✔ Réservation validée</span>
+<?php endif; ?>
+ <button class="act" onclick="event.stopPropagation(); if(confirm('Annuler cette réservation ?')) { window.location.href='annule_reservation.php?id=<?= $reservation['id'] ?>'; }">Annuler</button>
                 </div>
                 </div>
                 </div>
@@ -294,7 +300,7 @@ $result = $stmt->get_result();
                 </div>
                 <p class="nom"><?= htmlspecialchars($annonce['titre']) ?></p>
                 <p class="date">Créée le : <?= htmlspecialchars(date('d/m/Y', strtotime($annonce['date_creation']))) ?></p>
-                <a href="profil.php?actualiser_annonce=<?= $annonce['id'] ?>" class="act" onclick="event.stopPropagation(); return confirm('Actualiser cette annonce ?');">Actualiser</a>
+                <a href="profil.php?actualiser_annonce=<?= $annonce['id'] ?>#actualisations" class="act" onclick="event.stopPropagation(); return confirm('Actualiser cette annonce ?');"style="text-decoration: none;">Actualiser</a>
             </div>
         <?php endwhile; ?>
     </div>
@@ -494,6 +500,19 @@ document.getElementById('searchInput').addEventListener('input', function() {
             document.querySelector('#annonces .ancs').innerHTML = annonces;
         });
 });
+
+
+
+
+
+
+window.onload = function () {
+    const hash = window.location.hash || '#annonces';
+    const tabId = hash.replace('#', '');
+    const btn = document.querySelector(`.tab-link[onclick*="${tabId}"]`);
+    if (btn) showTab(tabId, btn);
+};
+
 </script>
 
 

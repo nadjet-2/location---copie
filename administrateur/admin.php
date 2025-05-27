@@ -64,7 +64,7 @@ $sql = "SELECT id, nom, prenom, photo FROM utilisateur
 $result = $conn->query($sql);
 
 
- $reservations = $conn->query("
+$reservations = $conn->query("
     SELECT r.*, a.titre, a.photos,
            loc.nom AS loc_nom, loc.prenom AS loc_prenom,
            prop.nom AS prop_nom, prop.prenom AS prop_prenom
@@ -73,8 +73,11 @@ $result = $conn->query($sql);
     JOIN utilisateur loc ON r.locataire_id = loc.id
     JOIN utilisateur prop ON a.proprietaire_id = prop.id
     WHERE r.statut = 'valide'
+    AND TIMESTAMPDIFF(HOUR, r.date_debut, NOW()) >= 24
     ORDER BY r.id DESC
 ");
+
+
 
 
 ?>
