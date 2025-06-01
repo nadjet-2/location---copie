@@ -37,6 +37,9 @@ if ($result->num_rows > 0) {
     $update->bind_param("i", $id);
     $update->execute();
 }
+$update = $conn->prepare("UPDATE reservation SET statut = ?, notif = 1 WHERE id = ?");
+$update->bind_param("si", $statut, $idReservation);
+$update->execute();
 
 $conn->close();
 header("Location: profil.php#reservations");

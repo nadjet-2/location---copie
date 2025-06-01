@@ -397,8 +397,12 @@
   font-size:13.5px;
 
 }
+.act:hover{
+background-color: rosybrown;
+  font-size:13.5px;
+}
 .act{
-    margin-right:5px;
+    margin-right:1px;
 
 }
 .a:hover{

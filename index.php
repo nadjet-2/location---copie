@@ -84,17 +84,36 @@ if ($conn->connect_error) {
 $sql = "SELECT * FROM annonce WHERE valide = 1 ORDER BY id DESC";
 $result = $conn->query($sql);
 
-if ($result->num_rows > 0): ?>
+if ($result->num_rows > 0):
+$favoris = [];
+if (isset($_SESSION['utilisateur']) && strtolower($_SESSION['utilisateur']['role']) === 'locataire') {
+    $locataireId = $_SESSION['utilisateur']['id'];
+    $res = $conn->query("SELECT annonce_id FROM favoris WHERE locataire_id = $locataireId");
+    while ($f = $res->fetch_assoc()) {
+        $favoris[] = $f['annonce_id'];
+    }
+}
+ ?>
+
     <?php while($row = $result->fetch_assoc()): 
         $photos = explode(',', $row['photos']);
         $photo = !empty($photos[0]) ? 'annonces/' . $photos[0] : 'images/default.jpg';
- // fallback image
+
     ?>
         <div class="propriete-cart">
         <div class="image-container">
             <img src="<?= htmlspecialchars($photo) ?>" alt="<?= htmlspecialchars($row['titre']) ?>">
-            <i class="fa-regular fa-heart heart-icon"></i>
-            </div>
+            <?php
+            $isFavori = in_array($row['id'], $favoris);
+
+            ?>
+
+            <button class="favori-btn" data-annonce-id="<?= $row['id'] ?>" style="background: none; border: none; cursor: pointer;">
+  <i class="fa<?= $isFavori ? 's' : 'r' ?> fa-heart <?= $isFavori ? 'favori-actif' : '' ?>"></i>
+</button>
+
+
+          </div>
 
             <div class="propriete-cont">
                 <h3><?= htmlspecialchars($row['titre']) ?></h3>
@@ -204,17 +223,7 @@ $conn->close();
 
   const isLocataire = <?= isset($_SESSION['utilisateur']) && strtolower($_SESSION['utilisateur']['role']) === 'locataire' ? 'true' : 'false' ?>;
 
-  document.querySelectorAll('.heart-icon').forEach(heart => {
-    heart.addEventListener('click', (e) => {
-      if (!isLocataire) {
-        alert('S’il vous plaît créez un compte ou connectez-vous comme locataire pour ajouter aux favoris.');
-        return;
-      }
-      heart.classList.toggle('active');
-      heart.classList.toggle('fas'); // plein
-      heart.classList.toggle('far'); // contour
-    });
-  });
+  
 
 
 
@@ -246,5 +255,46 @@ $conn->close();
   });
   
 </script>
+<script>
+document.querySelectorAll('.favori-btn').forEach(button => {
+  button.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    const annonceId = button.getAttribute('data-annonce-id');
+    const icon = button.querySelector('i');
+
+    try {
+      const response = await fetch('ajouter_favoris.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `annonce_id=${annonceId}`
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        // Toggle icône cœur pleine / vide
+        if (result.isFavorite) {
+          icon.classList.remove('far');
+          icon.classList.add('fas', 'favori-actif');
+        } else {
+          icon.classList.remove('fas', 'favori-actif');
+          icon.classList.add('far');
+        }
+      } else {
+        alert(result.message);
+      }
+
+    } catch (error) {
+      console.error('Erreur AJAX :', error);
+      alert('Une erreur est survenue. Veuillez réessayer.');
+    }
+  });
+});
+</script>
+
+
 </body>
 </html>

@@ -64,6 +64,22 @@ while ($row = $resultAvis->fetch_assoc()) {
     $avis[] = $row;
 }
 
+$favoris = [];
+
+$sqlFavoris = "SELECT f.*, a.titre, a.photos, a.adresse
+               FROM favoris f
+               JOIN annonce a ON f.annonce_id = a.id
+               WHERE f.locataire_id = ?
+               ORDER BY f.date_sauv DESC";
+
+$stmtFavoris = $conn->prepare($sqlFavoris);
+$stmtFavoris->bind_param("i", $id);
+$stmtFavoris->execute();
+$resultFavoris = $stmtFavoris->get_result();
+
+while ($row = $resultFavoris->fetch_assoc()) {
+    $favoris[] = $row;
+}
 ?>
 
 
@@ -100,7 +116,7 @@ while ($row = $resultAvis->fetch_assoc()) {
                 <img src="../logins/<?php echo htmlspecialchars($locataire['photo']); ?>" alt="Avatar" class="user-avatar">
 
                 <div class="user-info">
-                   <h1>Bonjour, <?php echo htmlspecialchars($locataire['prenom']) . '&nbsp;' . htmlspecialchars($locataire['nom']); ?> 👋</h1>
+                   <h1>Bonjour, <?php echo htmlspecialchars($locataire['nom']) . '&nbsp;' . htmlspecialchars($locataire['nom']); ?> 👋</h1>
                    <span class="user-type">
                    <?php echo htmlspecialchars($locataire['role']); ?>
                     </span>
@@ -109,13 +125,12 @@ while ($row = $resultAvis->fetch_assoc()) {
             </div>
 
             <div class="dashboard-actions">
-                <a href="" class="btn-action btn-secondary">
+                <a href="modifier-profil.php" class="btn-action btn-secondary">
                     <i class="fas fa-user-edit"></i> Modifier le profil
                 </a>
 
-                    <a href="" class="btn-action btn-primary">
-                        <i class="fas fa-bell"></i> Notifications
-                    </a>
+
+                   
 
                    
             </div>
@@ -147,7 +162,10 @@ while ($row = $resultAvis->fetch_assoc()) {
 
                                         <div class="booking-details">
                                             <div class="booking-title"><?php echo htmlspecialchars($res['titre']); ?></div>
-
+                                                <div class="review-location">
+                                                    <i class="fas fa-map-marker-alt"></i>
+                                                    <?php echo htmlspecialchars($res['adresse']); ?>
+                                                </div>
                                                 <div class="booking-dates">
                                                     <i class="fas fa-calendar"></i>
                                                     Du <?php echo date('d/m/Y', strtotime($res['date_debut'])); ?>
@@ -190,12 +208,9 @@ while ($row = $resultAvis->fetch_assoc()) {
                                     </div>
                                     <?php endif; ?>                                    
                                 </div>   
-                            </div>
-                                     
+                            </div>           
                     </div>
-                </div>
-            </div>
-               
+
 
                 <div class="dashboard-card" id="Reviews">
                     <div class="card-header">
@@ -242,17 +257,14 @@ while ($row = $resultAvis->fetch_assoc()) {
 
                                                 <i class="fas fa-eye"></i> Voir
                                              </a>
-                                            </div>
                                         </div>
-                                        <?php endforeach; ?>
                                     </div>
-                                    <?php endif; ?>                                    
-                                </div>   
-                            </div>
-                                     
-                    </div>
+                                    <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>                                    
+                            </div>   
+                    </div>             
                 </div>
-            </div>
 
                 
                  <div class="dashboard-card" id="Reservations">
@@ -262,50 +274,52 @@ while ($row = $resultAvis->fetch_assoc()) {
                     </div>
 
                     <div class="card-content">
-                            <div class="empty-state">
-                                <i class="fas fa-calendar-alt"></i>
-                                <h3>Aucune annonces</h3>
-                                <p>Vous n'avez pas encore sauvgarder des annonces.</p>
-                            </div>
-                            <div class="saved-list" >
-                                <div class="review-list">
-                                
-                                    <div class="review-item">
-                                        <img src="" alt="" class="review-image">
-
+                        <div class="saved-list">
+                                 <?php if (empty($favoris)) : ?>
+                                <div class="empty-state">
+                                    <i class="fas fa-star"></i>
+                                    <h3>Aucun favoris</h3>
+                                    <p>Vous n'avez pas encore sauvegarder une annonce</p>
+                                </div>
+                                <?php else : ?>
+                                <div class="saved-list">
+                                    <?php foreach ($favoris as $res) : ?>
+                                    <div class="saved-item">
+                                        <img src="../annonces/<?php echo htmlspecialchars($res['photos'] ?? 'placeholder.jpg'); ?>" alt="Annonce" class="review-image">
                                         <div class="review-details">
-                                            <div class="review-title">Titre annonce</div>
+                                            <div class="review-title"><?php echo htmlspecialchars($res['titre']); ?></div>
 
                                             <div class="review-location">
                                                 <i class="fas fa-map-marker-alt"></i>
+                                                <?php echo htmlspecialchars($res['adresse']); ?>
                                             </div>
 
                                             <div class="review-date">
                                                 <i class="fas fa-calendar"></i>
-                                                Annonce sauvegarder le :  
+                                                sauvegarder le : <?php echo date('d/m/Y', strtotime($res['date_sauv'])); ?>
                                             </div>
 
                                             
                                         </div>
 
                                         <div class="review-actions" style="display: flex; flex-direction: column; justify-content: center; padding: 0 15px;">
-                                            <a href="" class="btn-action btn-secondary">
+                                            <a href="../annonces/detail-annonce.php?id=<?= $res['annonce_id'] ?>" class="btn-action btn-secondary" style="margin-bottom: 10px;">
                                                 <i class="fas fa-eye"></i> Voir
                                             </a>
                                         </div>
                                     </div>
-                                    
-                            </div>
-                            
-
-                                   
-                                     
+                                    <?php endforeach; ?> 
+                                </div>
+                                <?php endif; ?>                                    
                             </div>
                     </div>
                 </div>
 
+
+
             </div>
         </div>
+        
     </div>
 
     <footer class="footer">

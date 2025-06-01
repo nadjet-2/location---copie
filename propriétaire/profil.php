@@ -42,8 +42,11 @@ if (isset($_GET['delete_annonce'])) {
         }
     }
 
-    // Supprimer l'annonce de la base
-    $conn->query("DELETE FROM annonce WHERE id = $id");
+// Supprimer les favoris associés à l'annonce
+$conn->query("DELETE FROM favoris WHERE annonce_id = $id");
+
+// Puis supprimer l'annonce
+$conn->query("DELETE FROM annonce WHERE id = $id");
 
     // Redirection vers la même page
     header("Location: profil.php");
@@ -91,7 +94,9 @@ $sql_reservations = "
     JOIN annonce a ON r.annonce_id = a.id
     JOIN utilisateur u ON r.locataire_id = u.id
     WHERE a.proprietaire_id = ?
+    AND r.statut != 'annule'
 ";
+
 
 $stmt_res = $conn->prepare($sql_reservations);
 $stmt_res->bind_param("i", $utilisateur_id);
@@ -177,14 +182,6 @@ $result = $stmt->get_result();
             <a href="../annonces/annonce.php"><button class="creer">Créer une annonce</button></a>
 
 
-
-            <button class="notification"><i class="fas fa-bell"></i></button>
-            <div class="notif-menu" id="notifMenu">
-                <ul>
-                    <li><a href=""> Nouveau message reçu</a></li>
-                 
-                </ul>
-            </div>
             <button class="profil"><i class="fas fa-user"></i></button>
             
         </div>
@@ -271,11 +268,12 @@ $result = $stmt->get_result();
                 <div class="btnn" style="margin-left: 15px;">
               
                     <?php if ($reservation['statut'] !== 'valide'): ?>
-    <button class="act" onclick="event.stopPropagation(); if(confirm('Valider cette réservation ?')) { window.location.href='valide_reservation.php?id=<?= $reservation['id'] ?>'; }">Valider</button>
+    <button class="act" onclick="event.stopPropagation(); if(confirm('Valider cette réservation ?')) { window.location.href='changer-statut-reservation.php?id=<?= $reservation['id'] ?>&action=valide'; }">Valider</button>
+    <button class="act"  onclick="event.stopPropagation(); if(confirm('Annuler cette réservation ?')) { window.location.href='changer-statut-reservation.php?id=<?= $reservation['id'] ?>&action=annule'; }">Annuler</button>
 <?php else: ?>
     <span class="badge-validée">✔ Réservation validée</span>
 <?php endif; ?>
- <button class="act" onclick="event.stopPropagation(); if(confirm('Annuler cette réservation ?')) { window.location.href='annule_reservation.php?id=<?= $reservation['id'] ?>'; }">Annuler</button>
+
                 </div>
                 </div>
                 </div>
@@ -300,7 +298,7 @@ $result = $stmt->get_result();
                 </div>
                 <p class="nom"><?= htmlspecialchars($annonce['titre']) ?></p>
                 <p class="date">Créée le : <?= htmlspecialchars(date('d/m/Y', strtotime($annonce['date_creation']))) ?></p>
-                <a href="profil.php?actualiser_annonce=<?= $annonce['id'] ?>#actualisations" class="act" onclick="event.stopPropagation(); return confirm('Actualiser cette annonce ?');"style="text-decoration: none;">Actualiser</a>
+                <a href="profil.php?actualiser_annonce=<?= $annonce['id'] ?>#actualisations" class="act" onclick="event.stopPropagation(); return confirm('Actualiser cette annonce ?');"style="text-decoration: none; ">Actualiser</a>
             </div>
         <?php endwhile; ?>
     </div>
@@ -397,22 +395,7 @@ $result = $stmt->get_result();
         }
     });
 
-    const notifBtn = document.querySelector('.notification');
-    const notifMenu = document.getElementById('notifMenu');
-
-// Toggle affichage des notifications
-    notifBtn.addEventListener('click', () => {
-        const isVisible = notifMenu.style.display === 'block';
-        notifMenu.style.display = isVisible ? 'none' : 'block';
-        profilMenu.style.display = 'none'; // cacher le menu profil si ouvert
-    });
-
-// Fermer si on clique ailleurs
-    document.addEventListener('click', function(e) {
-        if (!notifBtn.contains(e.target) && !notifMenu.contains(e.target)) {
-            notifMenu.style.display = 'none';
-        }
-    });
+   
 
 // Ouvrir le panneau latéral quand on clique sur le bouton "profil"
 document.querySelector('.profil').addEventListener('click', function (e) {
@@ -449,7 +432,7 @@ document.querySelector('.profil').addEventListener('click', function (e) {
 // Cache le message après 3 secondes
                 setTimeout(() => {
                     msg.style.display = 'none';
-                }, 3000);
+                }, 5000);
             }
         });
     });
@@ -482,12 +465,7 @@ document.getElementById('cancelEdit').addEventListener('click', function () {
     document.getElementById('profilInfos').style.display = 'block';
 });
 
-    
-  
-</script>
 
-
-<script>
 document.getElementById('searchInput').addEventListener('input', function() {
     const keyword = this.value;
 

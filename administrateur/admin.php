@@ -33,14 +33,51 @@ if (isset($_GET['delete_annonce'])) {
         }
     }
 
-    $conn->query("DELETE FROM annonce WHERE id = $id");
+    // 1. Supprimer les favoris liés à cette annonce (éviter erreur clé étrangère)
+    $stmt1 = $conn->prepare("DELETE FROM favoris WHERE annonce_id = ?");
+    $stmt1->bind_param("i", $id);
+    $stmt1->execute();
+    $stmt1->close();
+
+    // 2. Supprimer l'annonce
+    $stmt2 = $conn->prepare("DELETE FROM annonce WHERE id = ?");
+    $stmt2->bind_param("i", $id);
+    $stmt2->execute();
+    $stmt2->close();
+
     header("Location: admin.php#annonces");
     exit;
 }
+
 // Supprimer un compte utilisateur
 if (isset($_GET['delete_id'])) {
   $id = intval($_GET['delete_id']);
-  $conn->query("DELETE FROM utilisateur WHERE id = $id");
+if (isset($_GET['delete_id'])) {
+  $id = intval($_GET['delete_id']);
+
+  // Supprimer d'abord les favoris liés à ce locataire
+  $stmt1 = $conn->prepare("DELETE FROM favoris WHERE locataire_id = ?");
+  $stmt1->bind_param("i", $id);
+  $stmt1->execute();
+  $stmt1->close();
+
+  // Supprimer ses réservations (optionnel mais souvent nécessaire)
+  $stmt2 = $conn->prepare("DELETE FROM reservation WHERE locataire_id = ?");
+  $stmt2->bind_param("i", $id);
+  $stmt2->execute();
+  $stmt2->close();
+
+  // Enfin, supprimer le compte utilisateur
+  $stmt3 = $conn->prepare("DELETE FROM utilisateur WHERE id = ?");
+  $stmt3->bind_param("i", $id);
+  $stmt3->execute();
+  $stmt3->close();
+
+  echo "<script>
+      alert('Compte supprimé avec succès');
+      window.location.href = 'admin.php#comptes';
+  </script>";
+}
   header("Location: admin.php#comptes");
   exit;
 }
@@ -130,8 +167,15 @@ $reservations = $conn->query("
   <!-- Annonces à valider -->
   <h2>Annonces à valider</h2>
   <?php
-  $sql = "SELECT * FROM annonce WHERE valide = 0 ORDER BY id DESC";
+$sql = "
+SELECT a.*, u.nom AS prop_nom, u.prenom AS prop_prenom 
+FROM annonce a
+JOIN utilisateur u ON a.proprietaire_id = u.id
+WHERE a.valide = 0
+ORDER BY a.id DESC
+";
   $result = $conn->query($sql);
+  
 
   if ($result->num_rows > 0): ?>
     <div class="ancs">
@@ -141,11 +185,17 @@ $reservations = $conn->query("
           <div class="image">
             <img class="img" src="../annonces/<?= htmlspecialchars($row['photos']) ?>" alt="img">
           </div>
+          <div class="det">
+            <div class="det-reser">
           <p class="nom"><?= htmlspecialchars($row['titre']) ?></p>
+          <p class="nom1" style="margin-bottom: 0px;">Propriétaire : <?= htmlspecialchars($row['prop_nom'] . ' ' . $row['prop_prenom']) ?></p>
+          </div>
           <a class="button1" href="admin.php?valider_id=<?= $row['id'] ?>#annonces" >Valider</a>
 <a href="admin.php?delete_annonce=<?= $row['id'] ?>#annonces" class="btn-supp" onclick="return confirm('Supprimer cette annonce ?')">
     <i class="fas fa-trash-alt"></i>
 </a>
+          </div>
+
 
 
         </div>

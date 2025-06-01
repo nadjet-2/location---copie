@@ -206,26 +206,6 @@ button:hover {
   position: relative;
 }
 
-.heart-icon {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  font-size: 24px;
-  color: #fff;
-  background-color: rgba(0,0,0,0.4);
-  padding: 8px;
-  border-radius: 50%;
-  transition: transform 0.3s ease, color 0.3s ease;
-  cursor: pointer;
-  z-index: 10;
-}
-
-.heart-icon.active {
-  color: red;
-}
-.heart-icon.fas {
-  color: red;
-}
 .btn-aut{
   display: flex;
     justify-content:space-around;
@@ -353,3 +333,23 @@ footer {
   .page-header{
     text-align: center;
   }
+ 
+.favori-btn i {
+    position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 24px;
+  color: #fff;
+  background-color: rgba(0,0,0,0.4);
+  padding: 8px;
+  border-radius: 50%;
+  transition: transform 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.favori-btn i.favori-actif {
+  color: red;
+}
+
+

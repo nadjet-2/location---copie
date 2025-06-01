@@ -46,4 +46,8 @@ if (isset($_GET['id'])) {
 } else {
     echo "ID de réservation manquant.";
 }
+
+$update = $conn->prepare("UPDATE reservation SET statut = ?, notif = 1 WHERE id = ?");
+$update->bind_param("si", $statut, $idReservation);
+$update->execute();
 ?>
