@@ -116,7 +116,7 @@ while ($row = $resultFavoris->fetch_assoc()) {
                 <img src="../logins/<?php echo htmlspecialchars($locataire['photo']); ?>" alt="Avatar" class="user-avatar">
 
                 <div class="user-info">
-                   <h1>Bonjour, <?php echo htmlspecialchars($locataire['nom']) . '&nbsp;' . htmlspecialchars($locataire['nom']); ?> 👋</h1>
+                   <h1>Bonjour, <?php echo htmlspecialchars($locataire['nom']) . '&nbsp;' . htmlspecialchars($locataire['prenom']); ?> 👋</h1>
                    <span class="user-type">
                    <?php echo htmlspecialchars($locataire['role']); ?>
                     </span>
