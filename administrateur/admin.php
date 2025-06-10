@@ -110,7 +110,7 @@ $reservations = $conn->query("
     JOIN utilisateur loc ON r.locataire_id = loc.id
     JOIN utilisateur prop ON a.proprietaire_id = prop.id
     WHERE r.statut = 'valide'
-    AND TIMESTAMPDIFF(MINUTE, r.date_debut, NOW()) >= 1
+    AND TIMESTAMPDIFF(MINUTE, r.date_debut, NOW()) >= 2
     ORDER BY r.id DESC
 ");
 
