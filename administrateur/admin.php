@@ -110,9 +110,10 @@ $reservations = $conn->query("
     JOIN utilisateur loc ON r.locataire_id = loc.id
     JOIN utilisateur prop ON a.proprietaire_id = prop.id
     WHERE r.statut = 'valide'
-    AND TIMESTAMPDIFF(HOUR, r.date_debut, NOW()) >= 24
+    AND TIMESTAMPDIFF(MINUTE, r.date_debut, NOW()) >= 1
     ORDER BY r.id DESC
 ");
+
 $proprietaires = $conn->query("SELECT id, nom, prenom, photo FROM utilisateur WHERE role = 'proprietaire' AND email != 'mnhome.dz1@gmail.com'");
 $locataires = $conn->query("SELECT id, nom, prenom, photo FROM utilisateur WHERE role = 'locataire'");
 

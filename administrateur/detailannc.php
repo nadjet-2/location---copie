@@ -32,8 +32,8 @@ if ($result->num_rows === 0) {
 $annonce = $result->fetch_assoc();
 $photos = explode(',', $annonce['photos']);
 $photo_principale = !empty($photos[0]) ? '../annonces/'. $photos[0] : '../images/default.jpg';
-$piece_identite_path = !empty($annonce['piece_identite']) ? '../' . $annonce['piece_identite'] : '../images/default-doc.jpg';
-$acte_propriete_path = !empty($annonce['acte_propriete']) ? '../' . $annonce['acte_propriete'] : '../images/default-doc.jpg';
+$piece_identite_path = !empty($annonce['piece_identite']) ? '../annonces/' . $annonce['piece_identite'] : '../images/default-doc.jpg';
+$acte_propriete_path = !empty($annonce['acte_propriete']) ? '../annonces/' . $annonce['acte_propriete'] : '../images/default-doc.jpg';
 
 
 
