@@ -391,6 +391,7 @@
         border: none;
         cursor: pointer;
         margin-right:20px;
+        font-size: 13.5;
     }
     button:hover {
   background-color: rosybrown;
@@ -399,7 +400,7 @@
 }
 .act:hover{
 background-color: rosybrown;
-  font-size:13.5px;
+  font-size:14px;
 }
 .act{
     margin-right:1px;

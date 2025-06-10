@@ -118,7 +118,9 @@ while ($row = $resultFavoris->fetch_assoc()) {
                 <div class="user-info">
                    <h1>Bonjour, <?php echo htmlspecialchars($locataire['nom']) . '&nbsp;' . htmlspecialchars($locataire['prenom']); ?> 👋</h1>
                    <span class="user-type">
-                   <?php echo htmlspecialchars($locataire['role']); ?>
+                    <?php echo htmlspecialchars($locataire['email']); ?> <br>
+                    <?php echo htmlspecialchars($locataire['role']); ?>
+
                     </span>
 
                 </div>

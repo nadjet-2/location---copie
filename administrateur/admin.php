@@ -113,6 +113,8 @@ $reservations = $conn->query("
     AND TIMESTAMPDIFF(HOUR, r.date_debut, NOW()) >= 24
     ORDER BY r.id DESC
 ");
+$proprietaires = $conn->query("SELECT id, nom, prenom, photo FROM utilisateur WHERE role = 'proprietaire' AND email != 'mnhome.dz1@gmail.com'");
+$locataires = $conn->query("SELECT id, nom, prenom, photo FROM utilisateur WHERE role = 'locataire'");
 
 
 
@@ -143,24 +145,37 @@ $reservations = $conn->query("
 
   <main class="content">
     <div id="comptes" class="tab">
-  <h2>Tous les comptes</h2>
-<div class="ancs">
-    <?php while ($row = $result->fetch_assoc()) : ?>
-        <div class="annonc">
-            <div class="image">
-            <img class="img" src="../logins/<?= htmlspecialchars($row['photo']) ?>" alt="img">
-
-             
-            </div>
-            <p class="nom"><?= htmlspecialchars($row['nom'] . ' ' . $row['prenom']) ?></p>
-            <a href="?delete_id=<?= $row['id'] ?>" class="btn-supp" onclick="return confirm('Supprimer ce compte ?')">
-                <i class="fas fa-trash-alt"></i>
-            </a>
+  <h2>Comptes Propriétaires :</h2>
+  <div class="ancs">
+    <?php while ($row = $proprietaires->fetch_assoc()) : ?>
+      <div class="annonc">
+        <div class="image">
+          <img class="img" src="../logins/<?= htmlspecialchars($row['photo']) ?>" alt="img">
         </div>
+        <p class="nom"><?= htmlspecialchars($row['nom'] . ' ' . $row['prenom']) ?></p>
+        <a href="?delete_id=<?= $row['id'] ?>" class="btn-supp" onclick="return confirm('Supprimer ce compte ?')">
+          <i class="fas fa-trash-alt"></i>
+        </a>
+      </div>
     <?php endwhile; ?>
+  </div>
+
+  <h2 style="margin-top: 40px;">Comptes Locataires :</h2>
+  <div class="ancs">
+    <?php while ($row = $locataires->fetch_assoc()) : ?>
+      <div class="annonc">
+        <div class="image">
+          <img class="img" src="../logins/<?= htmlspecialchars($row['photo']) ?>" alt="img">
+        </div>
+        <p class="nom"><?= htmlspecialchars($row['nom'] . ' ' . $row['prenom']) ?></p>
+        <a href="?delete_id=<?= $row['id'] ?>" class="btn-supp" onclick="return confirm('Supprimer ce compte ?')">
+          <i class="fas fa-trash-alt"></i>
+        </a>
+      </div>
+    <?php endwhile; ?>
+  </div>
 </div>
 
-  </div>
 
   <div id="annonces" class="tab">
 
@@ -190,10 +205,10 @@ ORDER BY a.id DESC
           <p class="nom"><?= htmlspecialchars($row['titre']) ?></p>
           <p class="nom1" style="margin-bottom: 0px;">Propriétaire : <?= htmlspecialchars($row['prop_nom'] . ' ' . $row['prop_prenom']) ?></p>
           </div>
-          <a class="button1" href="admin.php?valider_id=<?= $row['id'] ?>#annonces" >Valider</a>
-<a href="admin.php?delete_annonce=<?= $row['id'] ?>#annonces" class="btn-supp" onclick="return confirm('Supprimer cette annonce ?')">
-    <i class="fas fa-trash-alt"></i>
-</a>
+          <a class="button1" href="admin.php?valider_id=<?= $row['id'] ?>#annonces"  >Valider</a>
+          <a href="admin.php?delete_annonce=<?= $row['id'] ?>#annonces" class="btn-supp" onclick="return confirm('Supprimer cette annonce ?')">
+            <i class="fas fa-trash-alt"></i>
+          </a>
           </div>
 
 
@@ -276,7 +291,9 @@ $sql2 = "
 
                       </div>
 
-                    <span class="button1" style="pointer-events: none; margin-right:12px;">Valider</span>
+                    <span class="button1" style="pointer-events: none; margin-right:-7px;">Valider</span>
+                    <span class="button1" style="pointer-events: none; margin-right:12px;">Refuser</span>
+
                   </div>
                 </div>
 

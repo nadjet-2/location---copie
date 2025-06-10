@@ -95,6 +95,8 @@ $sql_reservations = "
     JOIN utilisateur u ON r.locataire_id = u.id
     WHERE a.proprietaire_id = ?
     AND r.statut != 'annule'
+    ORDER BY r.date_reservation DESC
+
 ";
 
 
@@ -149,7 +151,7 @@ if ($search !== '') {
     $stmt = $conn->prepare($sql_annonces);
     $stmt->bind_param("isss", $utilisateur_id, $search, $like, $like);
 } else {
-    $sql_annonces = "SELECT * FROM annonce WHERE proprietaire_id = ?";
+    $sql_annonces = "SELECT * FROM annonce WHERE proprietaire_id = ? ORDER BY date_creation DESC";
     $stmt = $conn->prepare($sql_annonces);
     $stmt->bind_param("i", $utilisateur_id);
 }
@@ -323,7 +325,7 @@ $result = $stmt->get_result();
        <div class="panneau-cont">
     <div id="profilInfos">
         <ul>
-            <li><a href=""><?php echo htmlspecialchars($utilisateur['prenom'] . ' ' . $utilisateur['nom']); ?></a></li>
+            <li><a href=""><?php echo htmlspecialchars($utilisateur['nom'] . ' ' . $utilisateur['prenom']); ?></a></li>
             <li><a href=""><?php echo htmlspecialchars($utilisateur['email']); ?></a></li>
             <li><a href=""><?php echo isset($utilisateur['tel']) ? htmlspecialchars($utilisateur['tel']) : 'Non renseigné'; ?></a></li>
             <li><a href=""><?php echo htmlspecialchars($utilisateur['role']); ?></a></li>
@@ -336,11 +338,11 @@ $result = $stmt->get_result();
         <form method="post" enctype="multipart/form-data">
             <input type="hidden" name="update_profile" value="1">
 
-            <label>Prénom :</label>
-            <input type="text" name="prenom" value="<?= htmlspecialchars($utilisateur['prenom']) ?>" required><br><br>
-
             <label>Nom :</label>
             <input type="text" name="nom" value="<?= htmlspecialchars($utilisateur['nom']) ?>" required><br><br>
+
+            <label>Prénom :</label>
+            <input type="text" name="prenom" value="<?= htmlspecialchars($utilisateur['prenom']) ?>" required><br><br>
 
             <label>Email :</label>
             <input type="email" name="email" value="<?= htmlspecialchars($utilisateur['email']) ?>" required><br><br>

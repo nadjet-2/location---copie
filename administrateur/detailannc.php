@@ -32,6 +32,8 @@ if ($result->num_rows === 0) {
 $annonce = $result->fetch_assoc();
 $photos = explode(',', $annonce['photos']);
 $photo_principale = !empty($photos[0]) ? '../annonces/'. $photos[0] : '../images/default.jpg';
+$piece_identite_path = !empty($annonce['piece_identite']) ? '../' . $annonce['piece_identite'] : '../images/default-doc.jpg';
+$acte_propriete_path = !empty($annonce['acte_propriete']) ? '../' . $annonce['acte_propriete'] : '../images/default-doc.jpg';
 
 
 
@@ -43,6 +45,8 @@ $photo_principale = !empty($photos[0]) ? '../annonces/'. $photos[0] : '../images
 $stmt->close();
 $conn->close();
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -161,6 +165,36 @@ $conn->close();
       </div>
     </div>
   </div>
+   <div class="detailss">
+  <div class="detail">
+    <div class="detail-cont">
+      <div>
+        <h3>Pièce d'identité</h3>
+      <div class="image-princ">
+<img src="<?= htmlspecialchars($piece_identite_path) ?>" alt="Pièce d'identité" />
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail">
+    <div class="detail-cont">
+      <div>
+        <h3>Acte de propriété</h3>
+      <div class="image-princ">
+<img src="<?= htmlspecialchars($acte_propriete_path) ?>" alt="Acte de propriété" />
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
     </div>
 
   

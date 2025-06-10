@@ -210,11 +210,8 @@ $conn->close();
       $canReserve = false;
   }
 ?>
-<?php if ($canReserve): ?>
   <button class="btn" id="ouvrirModal">Réserver</button>
-<?php else: ?>
-  <button class="btn" disabled style="opacity: 0.6;">Déjà réservé</button>
-<?php endif; ?>
+
   <?php else: ?>
     <button class="btn" onclick="alert('S’il vous plaît créez un compte ou connectez-vous comme locataire pour réserver.');">Réserver</button>
   <?php endif; ?>

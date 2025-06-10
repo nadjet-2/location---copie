@@ -70,6 +70,9 @@ $locataire = $result->fetch_assoc();
             <label>Prénom :</label>
             <input type="text" name="prenom" value="<?= htmlspecialchars($locataire['prenom']) ?>" required>
 
+            <label>Prénom :</label>
+            <input type="text" name="prenom" value="<?= htmlspecialchars($locataire['email']) ?>" required>
+
             <label>Photo de profil :</label>
             <input type="file" name="photo" accept="image/*">
 
